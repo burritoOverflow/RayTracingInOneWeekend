@@ -1,5 +1,6 @@
 build/
-#
+build_xcode/
+
 # outdir for generated images
 images/
 

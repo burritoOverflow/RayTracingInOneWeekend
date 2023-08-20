@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 const int IMAGE_WIDTH = 1920;
 const int IMAGE_HEIGHT = 1080;

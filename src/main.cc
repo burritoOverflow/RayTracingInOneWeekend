@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 const int IMAGE_WIDTH = 1920;
 const int IMAGE_HEIGHT = 1080;
@@ -23,8 +24,15 @@ std::string GetCurrentDateStr(const std::string& time_fmt_str) {
 }
 
 std::string GetLogPreamble() {
-    const std::string date_fmt_str = "%m/%d/%Y - %H:%M:%S";
+    const std::string date_fmt_str = "%m/%d/%Y - %T";
     return GetCurrentDateStr(date_fmt_str);
+}
+
+void LogDuration(std::chrono::steady_clock::time_point start_time, std::chrono::steady_clock::time_point end_time) {
+    const auto total_time = end_time - start_time;
+    const auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(total_time).count();
+    const auto elapsed_s = std::chrono::duration_cast<std::chrono::seconds>(total_time).count();
+    std::clog << "\rDuration: " << elapsed_s << "s " << elapsed_ms << " ms " << "\n";
 }
 
 int main() {
@@ -38,6 +46,8 @@ int main() {
 
     out_stream << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
 
+    const auto start_time = std::chrono::steady_clock::now();
+    
     for (int j = 0; j < IMAGE_HEIGHT; ++j) {
         std::clog << "\r" << GetLogPreamble() << "  Scanlines remaining: " << (IMAGE_HEIGHT - j)
                   << ' ' << std::flush;
@@ -57,4 +67,7 @@ int main() {
 
     // ugh, avoid ugly formatting
     std::clog << "\rDone.                                           \n";
+    
+    const auto end_time = std::chrono::steady_clock::now();
+    LogDuration(start_time, end_time);
 }

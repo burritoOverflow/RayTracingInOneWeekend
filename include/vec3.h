@@ -1,5 +1,5 @@
-#ifndef VEC3_H
-#define VEC3_H
+#ifndef RAYTRACINGINONEWEEKEND_VEC3_H
+#define RAYTRACINGINONEWEEKEND_VEC3_H
 
 #include <cmath>
 #include <iostream>
@@ -13,7 +13,7 @@ class Vector3 {
     double y() const { return e_[1]; }
     double z() const { return e_[2]; }
 
-    Vector3 operator-() const { return Vector3(-e_[0], -e_[1], -e_[2]); }
+    Vector3 operator-() const { return {-e_[0], -e_[1], -e_[2]}; }
     double operator[](int i) const { return e_[i]; }
     double& operator[](int i) { return e_[i]; }
 
@@ -41,4 +41,41 @@ class Vector3 {
     double e_[3];
 };
 
-#endif  // VEC3_H
+inline std::ostream& operator<<(std::ostream& out, const Vector3& v) {
+    return out << v.x() << ' ' << v.y() << ' ' << v.z();
+}
+
+inline Vector3 operator+(const Vector3& u, const Vector3& v) {
+    return {u.x() + v.x(), u.y() + v.y(), u.z() + v.z()};
+}
+
+inline Vector3 operator-(const Vector3& u, const Vector3& v) {
+    return {u.x() - v.x(), u.y() - v.y(), u.z() - v.z()};
+}
+
+inline Vector3 operator*(const Vector3& u, const Vector3& v) {
+    return {u.x() * v.x(), u.y() * v.y(), u.z() * v.z()};
+}
+
+inline Vector3 operator*(double d, const Vector3& v) {
+    return {d * v.x(), d * v.y(), d * v.z()};
+}
+
+inline Vector3 operator*(const Vector3& v, double d) {
+    return d * v;
+}
+
+inline Vector3 operator/(Vector3 v, double d) {
+    return (1 / d) * v;
+}
+
+inline double dot(const Vector3& u, const Vector3& v) {
+    return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
+}
+
+inline Vector3 cross(const Vector3& u, const Vector3& v) {
+    return {u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(),
+            u.x() * v.y() - u.y() * v.x()};
+}
+
+#endif  // RAYTRACINGINONEWEEKEND_VEC3_H

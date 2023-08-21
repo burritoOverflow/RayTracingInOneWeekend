@@ -69,4 +69,6 @@ int main() {
 
     const auto end_time = std::chrono::steady_clock::now();
     LogDuration(start_time, end_time);
+
+    out_stream.close();
 }

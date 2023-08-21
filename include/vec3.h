@@ -78,4 +78,6 @@ inline Vector3 cross(const Vector3& u, const Vector3& v) {
             u.x() * v.y() - u.y() * v.x()};
 }
 
+using Point3 = Vector3;
+
 #endif  // RAYTRACINGINONEWEEKEND_VEC3_H

@@ -6,8 +6,13 @@
 #include "color.h"
 #include "vec3.h"
 
-const int IMAGE_WIDTH = 1920;
-const int IMAGE_HEIGHT = 1080;
+// see rationale in section 4.2
+const auto ASPECT_RATIO = 16.0 / 9.0;
+const int IMAGE_WIDTH = 800;
+const int IMAGE_HEIGHT = static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO);
+const auto VIEWPORT_HEIGHT = 2.0;
+const auto VIEWPORT_WIDTH = VIEWPORT_HEIGHT * (static_cast<double>(IMAGE_WIDTH) / IMAGE_HEIGHT);
+
 const std::string DIRNAME = "images";
 
 using time_point = std::chrono::steady_clock::time_point;

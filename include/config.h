@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <string_view>
 #include "color.h"
 
 // see rationale for these constants in section 4.2
@@ -8,15 +9,15 @@
 namespace config {
 // Image
 
-const auto ASPECT_RATIO = 16.0 / 9.0;
-const int IMAGE_WIDTH = 800;
-const int IMAGE_HEIGHT = static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO);
-const auto VIEWPORT_HEIGHT = 2.0;
-const auto VIEWPORT_WIDTH = VIEWPORT_HEIGHT * (static_cast<double>(IMAGE_WIDTH) / IMAGE_HEIGHT);
+constexpr auto ASPECT_RATIO = 16.0 / 9.0;
+constexpr int IMAGE_WIDTH = 800;
+constexpr int IMAGE_HEIGHT = static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO);
+constexpr auto VIEWPORT_HEIGHT = 2.0;
+constexpr auto VIEWPORT_WIDTH = VIEWPORT_HEIGHT * (static_cast<double>(IMAGE_WIDTH) / IMAGE_HEIGHT);
 
 // Camera
 
-const auto FOCAL_LENGTH = 1.0;
+constexpr auto FOCAL_LENGTH = 1.0;
 const auto CAMERA_CENTER = Point3(0, 0, 0);
 
 // Viewport vectors (see section 4.2)
@@ -42,7 +43,7 @@ const auto VIEWPORT_UPPER_LEFT =
 
 const auto PIXEL00_LOC = VIEWPORT_UPPER_LEFT + 0.5 * (PIXEL_DELTA_U + PIXEL_DELTA_V);
 
-const std::string DIRNAME = "images";
+constexpr std::string_view DIRNAME = "images";
 
 }  // namespace config
 

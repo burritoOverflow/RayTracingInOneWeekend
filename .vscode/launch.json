@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Ray Tracer",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build_debug/bin/ray_tracing_in_one_weekend",
+      "cwd": "${workspaceFolder}",
+      "showDisplayString": true,
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "preLaunchTask": "Build Debug (Ninja)",
+      "linux": {
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb"
+      }
+    }
+  ]
+}

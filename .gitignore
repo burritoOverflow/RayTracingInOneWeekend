@@ -1,4 +1,6 @@
 build/
+build_debug/
+build_release/
 build_xcode/
 
 # outdir for generated images
@@ -53,3 +55,6 @@ _deps
 *.app
 
 .idea/
+
+# contains debug and launch configurations
+!/.vscode

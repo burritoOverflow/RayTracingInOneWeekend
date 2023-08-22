@@ -33,9 +33,9 @@ class Vector3 {
 
     Vector3& operator/=(double d) { return *this *= 1 / d; }
 
-    double length() const { return std::sqrt(length_squared()); }
+    double Length() const { return std::sqrt(LengthSquared()); }
 
-    double length_squared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
+    double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
 
    private:
     double e_[3];
@@ -69,13 +69,17 @@ inline Vector3 operator/(Vector3 v, double d) {
     return (1 / d) * v;
 }
 
-inline double dot(const Vector3& u, const Vector3& v) {
+inline double Dot(const Vector3& u, const Vector3& v) {
     return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
 }
 
-inline Vector3 cross(const Vector3& u, const Vector3& v) {
+inline Vector3 Cross(const Vector3& u, const Vector3& v) {
     return {u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(),
             u.x() * v.y() - u.y() * v.x()};
+}
+
+inline Vector3 UnitVector(const Vector3 v) {
+    return v / v.Length();
 }
 
 using Point3 = Vector3;

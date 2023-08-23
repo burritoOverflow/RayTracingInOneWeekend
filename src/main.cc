@@ -43,7 +43,7 @@ Color RayColor(Ray& ray) {
     // linearly blend white and blue, depending on height of the y-coord
     const Vector3 unit_direction = UnitVector(ray.direction());
 
-    // a from 0 - 1
+    // a from 0 to 1
     const auto a = 0.5 * (unit_direction.y() + 1.0);
 
     // lerp of the form: blendedValue = (1 - a) * startValue + a * endValue

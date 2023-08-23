@@ -33,6 +33,8 @@ class Vector3 {
 
     Vector3& operator/=(double d) { return *this *= 1 / d; }
 
+    // length (or norm) of a vector is the square root of the sum of the squares of its
+    // entries, i.e sqrt(x^2 + y^2 + z^2)
     double Length() const { return std::sqrt(LengthSquared()); }
 
     double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
@@ -73,12 +75,20 @@ inline double Dot(const Vector3& u, const Vector3& v) {
     return u.x() * v.x() + u.y() * v.y() + u.z() * v.z();
 }
 
+/*
+ *  | Uy*Vz - Uz*Vy |
+ *  | Uz*Vx - UxVz |
+ *  | UxVy - UyVx |
+ */
 inline Vector3 Cross(const Vector3& u, const Vector3& v) {
     return {u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(),
             u.x() * v.y() - u.y() * v.x()};
 }
 
+// unit vector - vector whose length is 1
 inline Vector3 UnitVector(const Vector3 v) {
+    // normalizing a vector - convert nonzero vector V to
+    // a unit vector by dividing by the vector length
     return v / v.Length();
 }
 

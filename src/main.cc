@@ -8,7 +8,7 @@
 #include "ray.h"
 #include "vec3.h"
 
-using time_point = std::chrono::steady_clock::time_point;
+using namespace std::chrono;
 
 void CreateImageOutdir() {
     if (!std::filesystem::exists(config::DIRNAME)) {
@@ -30,11 +30,11 @@ std::string GetLogPreamble() {
     return GetCurrentDateStr(date_fmt_str);
 }
 
-void LogDuration(time_point start_time, time_point end_time) {
+void LogDuration(steady_clock::time_point start_time, steady_clock::time_point end_time) {
     const auto total_time = end_time - start_time;
-    const auto elapsed_ms =
-        std::chrono::duration_cast<std::chrono::milliseconds>(total_time).count();
-    const auto elapsed_s = std::chrono::duration_cast<std::chrono::seconds>(total_time).count();
+    const auto elapsed_ms = duration_cast<milliseconds>(total_time).count();
+    const auto elapsed_s = duration_cast<seconds>(total_time).count();
+
     std::clog << "\rDuration: " << elapsed_s << "s " << elapsed_ms << " ms "
               << "\n";
 }
@@ -60,7 +60,7 @@ int main() {
     std::ofstream out_stream(image_path.string().c_str());
     out_stream << "P3\n" << config::IMAGE_WIDTH << ' ' << config::IMAGE_HEIGHT << "\n255\n";
 
-    const auto start_time = std::chrono::steady_clock::now();
+    const auto start_time = steady_clock::now();
 
     for (int j = 0; j < config::IMAGE_HEIGHT; ++j) {
         std::clog << "\r" << GetLogPreamble()
@@ -81,7 +81,7 @@ int main() {
     // ugh, avoid ugly formatting
     std::clog << "\rDone.                                           \n";
 
-    const auto end_time = std::chrono::steady_clock::now();
+    const auto end_time = steady_clock::now();
     LogDuration(start_time, end_time);
 
     out_stream.close();

@@ -39,21 +39,28 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
               << "\n";
 }
 
-bool HitSphere(Point3& center, Ray& ray, double radius) {
+double HitSphere(Point3& center, Ray& ray, double radius) {
     // see walkthrough in section 5.1
     const Vector3 oc = ray.origin() - center;
     const auto a = Dot(ray.direction(), ray.direction());
     const auto b = 2.0 * Dot(oc, ray.direction());
     const auto c = Dot(oc, oc) - radius * radius;
     const auto discriminant = b * b - 4 * a * c;
-    return discriminant >= 0;
+
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - sqrt(discriminant) / (2.0 * a));
+    }
 }
 
 Color RayColor(Ray& ray) {
-    Point3 p{0, 0, 1};
-
-    if (HitSphere(p, ray, 0.5)) {
-        return {1, 0, 0};
+    Point3 p{0, 0, -1};
+    auto t = HitSphere(p, ray, 0.5);
+    if (t > 0.0) {
+        // see section 6.1
+        const Vector3 n = UnitVector(ray.at(t) - Vector3(0, 0, -1));
+        return 0.5 * Color(n.x() + 1, n.y() + 1, n.z() + 1);
     }
 
     // linearly blend white and blue, depending on height of the y-coord

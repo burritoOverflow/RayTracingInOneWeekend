@@ -39,7 +39,23 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
               << "\n";
 }
 
+bool HitSphere(Point3& center, Ray& ray, double radius) {
+    // see walkthrough in section 5.1
+    const Vector3 oc = ray.origin() - center;
+    const auto a = Dot(ray.direction(), ray.direction());
+    const auto b = 2.0 * Dot(oc, ray.direction());
+    const auto c = Dot(oc, oc) - radius * radius;
+    const auto discriminant = b * b - 4 * a * c;
+    return discriminant >= 0;
+}
+
 Color RayColor(Ray& ray) {
+    Point3 p{0, 0, 1};
+
+    if (HitSphere(p, ray, 0.5)) {
+        return {1, 0, 0};
+    }
+
     // linearly blend white and blue, depending on height of the y-coord
     const Vector3 unit_direction = UnitVector(ray.direction());
 
@@ -54,7 +70,7 @@ int main() {
     CreateImageOutdir();
 
     const std::string date_fmt_str = "%m-%d-%Y_%H-%M-%S";
-    const auto image_out_filename = GetCurrentDateStr(std::move(date_fmt_str)) + "image.ppm";
+    const auto image_out_filename = GetCurrentDateStr(date_fmt_str) + "image.ppm";
     auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
 
     std::ofstream out_stream(image_path.string().c_str());

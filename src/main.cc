@@ -40,17 +40,17 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
 }
 
 double HitSphere(Point3& center, Ray& ray, double radius) {
-    // see walkthrough in section 5.1
+    // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
     const Vector3 oc = ray.origin() - center;
-    const auto a = Dot(ray.direction(), ray.direction());
-    const auto b = 2.0 * Dot(oc, ray.direction());
-    const auto c = Dot(oc, oc) - radius * radius;
-    const auto discriminant = b * b - 4 * a * c;
+    const auto a = ray.direction().LengthSquared();
+    const auto half_b = Dot(oc, ray.direction());
+    const auto c = oc.LengthSquared() - radius * radius;
+    const auto discriminant = half_b * half_b - a * c;
 
     if (discriminant < 0) {
         return -1.0;
     } else {
-        return (-b - sqrt(discriminant) / (2.0 * a));
+        return (-half_b - sqrt(discriminant)) / a;
     }
 }
 

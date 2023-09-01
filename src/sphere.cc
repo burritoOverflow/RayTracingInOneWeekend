@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-bool Sphere::Hit(Ray& ray, double ray_tmin, double ray_tmax, HitRecord& hit_record) const {
+bool Sphere::Hit(const Ray& ray, double ray_tmin, double ray_tmax, HitRecord& hit_record) const {
     // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
     const Vector3 oc = ray.origin() - center_;
     const auto a = ray.direction().LengthSquared();

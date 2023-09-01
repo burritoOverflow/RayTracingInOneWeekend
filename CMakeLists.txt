@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCES
         src/main.cc
-        include/ray.h)
+        src/sphere.cc)
 
 add_executable(ray_tracing_in_one_weekend ${SOURCES})
 

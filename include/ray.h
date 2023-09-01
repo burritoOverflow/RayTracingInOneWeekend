@@ -1,7 +1,3 @@
-//
-// Created by rob on 8/20/23.
-//
-
 #ifndef RAYTRACINGINONEWEEKEND_RAY_H
 #define RAYTRACINGINONEWEEKEND_RAY_H
 

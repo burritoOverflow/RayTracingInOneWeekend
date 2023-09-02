@@ -18,11 +18,11 @@ class Ray {
     Ray() = default;
     Ray(const Point3& origin, const Vector3& direction) : origin_(origin), direction_(direction) {}
 
-    const Point3 origin() const { return origin_; }
-    const Vector3 direction() const { return direction_; }
+    Point3 origin() const { return origin_; }
+    Vector3 direction() const { return direction_; }
 
     // Implementation of the function that represents the ray: P(t) = A +tb
-    const Point3 at(double t) const { return origin_ + t * direction_; }
+    Point3 at(double t) const { return origin_ + t * direction_; }
 
    private:
     Point3 origin_;

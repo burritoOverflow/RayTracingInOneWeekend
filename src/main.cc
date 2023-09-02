@@ -43,10 +43,11 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
               << "\n";
 }
 
-Color RayColor(Ray& ray, const Hittable& world) {
+color::Color RayColor(Ray& ray, const Hittable& world) {
     HitRecord hit_record;
-    if (world.Hit(ray, 0, config::infinity, hit_record)) {
-        return 0.5 * (hit_record.normal_ + Color(1, 1, 1));
+
+    if (world.Hit(ray, Interval(0, config::infinity), hit_record)) {
+        return 0.5 * (hit_record.normal_ + color::Color(1, 1, 1));
     }
 
     // linearly blend white and blue, depending on height of the y-coord
@@ -56,7 +57,7 @@ Color RayColor(Ray& ray, const Hittable& world) {
     const auto a = 0.5 * (unit_direction.y() + 1.0);
 
     // lerp of the form: blendedValue = (1 - a) * startValue + a * endValue
-    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
+    return (1.0 - a) * color::Color(1.0, 1.0, 1.0) + a * color::Color(0.5, 0.7, 1.0);
 }
 
 int main() {
@@ -86,9 +87,9 @@ int main() {
             const auto ray_direction = pixel_center - config::CAMERA_CENTER;
 
             Ray ray{config::CAMERA_CENTER, ray_direction};
-            const Color pixel_color = RayColor(ray, world);
+            const color::Color pixel_color = RayColor(ray, world);
 
-            WriteColor(out_stream, pixel_color);
+            color::WriteColor(out_stream, pixel_color);
         }
     }
 

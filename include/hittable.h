@@ -1,6 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include "interval.h"
 #include "ray.h"
 
 struct HitRecord {
@@ -19,8 +20,7 @@ struct HitRecord {
 class Hittable {
    public:
     virtual bool Hit(const Ray& ray,
-                     double ray_tmin,
-                     double ray_tmax,
+                     Interval ray_t,
                      HitRecord& hitRecord) const = 0;
 
     virtual ~Hittable() = default;

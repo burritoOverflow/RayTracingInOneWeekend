@@ -13,6 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
         src/sphere.cc
         src/hittable_list.cc
+        src/color.cc
         src/main.cc)
 
 add_executable(ray_tracing_in_one_weekend ${SOURCES})

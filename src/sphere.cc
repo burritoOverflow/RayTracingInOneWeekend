@@ -1,6 +1,7 @@
 #include "sphere.h"
+#include "interval.h"
 
-bool Sphere::Hit(const Ray& ray, double ray_tmin, double ray_tmax, HitRecord& hit_record) const {
+bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
     const Vector3 oc = ray.origin() - center_;
     const auto a = ray.direction().LengthSquared();
@@ -17,9 +18,10 @@ bool Sphere::Hit(const Ray& ray, double ray_tmin, double ray_tmax, HitRecord& hi
     // find the nearest root in the range (see 6.3)
     auto root = (-half_b - sqrtd) / a;
 
-    if (root <= ray_tmin || ray_tmax <= root) {
+    if (!ray_t.surrounds(root)) {
         root = (-half_b + sqrtd) / a;
-        if (root <= ray_tmin || ray_tmax <= root)
+
+        if (!ray_t.surrounds(root))
             return false;
     }
 

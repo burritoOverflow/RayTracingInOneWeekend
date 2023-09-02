@@ -5,15 +5,16 @@ void HittableList::AddObject(const std::shared_ptr<Hittable>& object) {
 }
 
 bool HittableList::Hit(const Ray& ray,
-                       double ray_tmin,
-                       double ray_tmax,
+                       Interval ray_t,
                        HitRecord& hit_record) const {
     HitRecord temp_record;
     bool hit_anything{false};
-    double closest_so_far{ray_tmax};
+    double closest_so_far{ray_t.max()};
 
     for (const auto& object : objects) {
-        if (object->Hit(ray, ray_tmin, closest_so_far, temp_record)) {
+        Interval interval{ray_t.min(), closest_so_far};
+
+        if (object->Hit(ray, interval, temp_record)) {
             hit_anything = true;
             closest_so_far = temp_record.t_;
             hit_record = temp_record;

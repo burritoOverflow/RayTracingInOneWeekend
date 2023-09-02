@@ -4,12 +4,10 @@
 #include <fstream>
 #include "vec3.h"
 
+namespace color {
 using Color = Vector3;
 
-void WriteColor(std::ofstream& outstream, const Color& pixel_color) {
-    outstream << static_cast<int>(255.999 * pixel_color.x()) << ' '
-              << static_cast<int>(255.999 * pixel_color.y()) << ' '
-              << static_cast<int>(255.999 * pixel_color.z()) << '\n';
-}
+void WriteColor(std::ofstream& outstream, const Color& pixel_color);
+}  // namespace color
 
 #endif  // RAYTRACINGINONEWEEKEND_COLOR_H

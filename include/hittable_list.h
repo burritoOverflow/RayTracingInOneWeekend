@@ -12,8 +12,7 @@ class HittableList : public Hittable {
     void AddObject(const std::shared_ptr<Hittable>& object);
 
     bool Hit(const Ray& ray,
-             double ray_tmin,
-             double ray_tmax,
+             Interval ray_t,
              HitRecord& hit_record) const override;
 
    private:

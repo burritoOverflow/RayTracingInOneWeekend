@@ -1,5 +1,8 @@
 #include <chrono>
 #include <filesystem>
+#if defined(__APPLE__)
+#include <sstream>
+#endif
 #include <iostream>
 #include "color.h"
 #include "config.h"
@@ -40,10 +43,10 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
               << "\n";
 }
 
-Color RayColor(Ray& ray, const Hittable &world) {
+Color RayColor(Ray& ray, const Hittable& world) {
     HitRecord hit_record;
     if (world.Hit(ray, 0, config::infinity, hit_record)) {
-        return 0.5 * (hit_record.normal_ + Color(1,1,1));
+        return 0.5 * (hit_record.normal_ + Color(1, 1, 1));
     }
 
     // linearly blend white and blue, depending on height of the y-coord
@@ -70,8 +73,8 @@ int main() {
 
     // add a "world"
     HittableList world;
-    world.AddObject(std::make_shared<Sphere>(Point3(0,0,-1), 0.5));
-    world.AddObject(std::make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+    world.AddObject(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    world.AddObject(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     for (int j = 0; j < config::IMAGE_HEIGHT; ++j) {
         std::clog << "\r" << GetLogPreamble()

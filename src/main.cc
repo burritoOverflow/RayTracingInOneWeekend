@@ -1,6 +1,3 @@
-#if defined(__APPLE__)
-#include <sstream>
-#endif
 #include "camera.h"
 #include "hittable_list.h"
 #include "sphere.h"

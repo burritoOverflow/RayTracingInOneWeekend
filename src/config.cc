@@ -1,6 +1,9 @@
 #include "config.h"
 #include <filesystem>
 #include <string>
+#if defined(__APPLE__)
+#include <sstream>
+#endif
 
 std::string config::GetCurrentDateStr(const std::string& time_fmt_str) {
     auto t = std::time(nullptr);
@@ -16,14 +19,14 @@ std::string config::GetLogPreamble() {
     return GetCurrentDateStr(date_fmt_str);
 }
 
- void config::CreateImageOutdir() {
+void config::CreateImageOutdir() {
     if (!std::filesystem::exists(config::DIRNAME)) {
         std::filesystem::create_directory(config::DIRNAME);
     }
 }
 
 void config::LogDuration(std::chrono::steady_clock::time_point start_time,
-                 std::chrono::steady_clock::time_point end_time) {
+                         std::chrono::steady_clock::time_point end_time) {
     const auto total_time = end_time - start_time;
     const auto elapsed_ms =
         std::chrono::duration_cast<std::chrono::milliseconds>(total_time).count();

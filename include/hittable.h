@@ -7,6 +7,13 @@ struct HitRecord {
     Point3 point_;
     Vector3 normal_;
     double t_;
+    bool front_face_;
+
+    // pre-condition: outward_normal is assumed to have unit length
+    void SetFaceNormal(const Ray& ray, const Vector3& outward_normal) {
+        front_face_ = Dot(ray.direction(), outward_normal) < 0;
+        normal_ = front_face_ ? outward_normal : -outward_normal;
+    }
 };
 
 class Hittable {

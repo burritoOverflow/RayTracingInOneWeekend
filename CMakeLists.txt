@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25.0)
+cmake_minimum_required(VERSION 3.24.0)
 
 project(RayTracingInOneWeekend LANGUAGES CXX)
 
@@ -11,8 +11,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCES
-        src/main.cc
-        src/sphere.cc)
+        src/sphere.cc
+        src/hittable_list.cc
+        src/main.cc)
 
 add_executable(ray_tracing_in_one_weekend ${SOURCES})
 

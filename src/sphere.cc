@@ -25,7 +25,10 @@ bool Sphere::Hit(const Ray& ray, double ray_tmin, double ray_tmax, HitRecord& hi
 
     hit_record.t_ = root;
     hit_record.point_ = ray.at(hit_record.t_);
-    hit_record.normal_ = (hit_record.point_ - center_) / radius_;
+
+    // 6.4 front vs back faces
+    const Vector3 outward_normal = (hit_record.point_ - center_) / radius_;
+    hit_record.SetFaceNormal(ray, outward_normal);
 
     return true;
 }

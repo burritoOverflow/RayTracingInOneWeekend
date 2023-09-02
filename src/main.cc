@@ -1,11 +1,12 @@
 #include <chrono>
 #include <filesystem>
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include "color.h"
 #include "config.h"
+#include "hittable.h"
+#include "hittable_list.h"
 #include "ray.h"
+#include "sphere.h"
 #include "vec3.h"
 
 using namespace std::chrono;
@@ -39,28 +40,10 @@ void LogDuration(steady_clock::time_point start_time, steady_clock::time_point e
               << "\n";
 }
 
-double HitSphere(Point3& center, Ray& ray, double radius) {
-    // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
-    const Vector3 oc = ray.origin() - center;
-    const auto a = ray.direction().LengthSquared();
-    const auto half_b = Dot(oc, ray.direction());
-    const auto c = oc.LengthSquared() - radius * radius;
-    const auto discriminant = half_b * half_b - a * c;
-
-    if (discriminant < 0) {
-        return -1.0;
-    } else {
-        return (-half_b - sqrt(discriminant)) / a;
-    }
-}
-
-Color RayColor(Ray& ray) {
-    Point3 p{0, 0, -1};
-    auto t = HitSphere(p, ray, 0.5);
-    if (t > 0.0) {
-        // see section 6.1
-        const Vector3 n = UnitVector(ray.at(t) - Vector3(0, 0, -1));
-        return 0.5 * Color(n.x() + 1, n.y() + 1, n.z() + 1);
+Color RayColor(Ray& ray, const Hittable &world) {
+    HitRecord hit_record;
+    if (world.Hit(ray, 0, config::infinity, hit_record)) {
+        return 0.5 * (hit_record.normal_ + Color(1,1,1));
     }
 
     // linearly blend white and blue, depending on height of the y-coord
@@ -85,6 +68,11 @@ int main() {
 
     const auto start_time = steady_clock::now();
 
+    // add a "world"
+    HittableList world;
+    world.AddObject(std::make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    world.AddObject(std::make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+
     for (int j = 0; j < config::IMAGE_HEIGHT; ++j) {
         std::clog << "\r" << GetLogPreamble()
                   << "  Scanlines remaining: " << (config::IMAGE_HEIGHT - j) << ' ' << std::flush;
@@ -95,7 +83,7 @@ int main() {
             const auto ray_direction = pixel_center - config::CAMERA_CENTER;
 
             Ray ray{config::CAMERA_CENTER, ray_direction};
-            const Color pixel_color = RayColor(ray);
+            const Color pixel_color = RayColor(ray, world);
 
             WriteColor(out_stream, pixel_color);
         }

@@ -45,6 +45,14 @@ const auto PIXEL00_LOC = VIEWPORT_UPPER_LEFT + 0.5 * (PIXEL_DELTA_U + PIXEL_DELT
 
 constexpr std::string_view DIRNAME = "images";
 
+const double infinity = std::numeric_limits<double>::infinity();
+
+const double PI = 3.1415926535897932385;
+
+inline double DegreesToRadians(const double degrees) {
+    return degrees * PI / 180.0;
+}
+
 }  // namespace config
 
 #endif  // CONFIG_H

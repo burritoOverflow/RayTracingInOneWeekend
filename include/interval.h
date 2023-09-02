@@ -8,12 +8,24 @@ class Interval {
     Interval() : min_(+config::infinity), max_(-config::infinity) {}
     Interval(double min, double max) : min_(min), max_(max) {}
 
-    const double min() const { return min_;}
-    const double max() const { return max_;}
+    const double min() const { return min_; }
+    const double max() const { return max_; }
 
     bool contains(double x) const { return min_ <= x && x <= max_; }
 
     bool surrounds(double x) const { return min_ < x && x < max_; }
+
+    double clamp(double x) const {
+        if (x < min_) {
+            return min_;
+        }
+
+        if (x > max_) {
+            return max_;
+        }
+
+        return x;
+    }
 
    private:
     double min_, max_;

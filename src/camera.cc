@@ -3,8 +3,9 @@
 #include <filesystem>
 #include "config.h"
 
-color::Color Camera::RayColor(Ray& ray, const Hittable& world) {
+color::Color Camera::RayColor(const Ray& ray, const Hittable& world) {
     HitRecord hit_record;
+
     if (world.Hit(ray, Interval(0, config::infinity), hit_record)) {
         return 0.5 * (hit_record.normal_ + color::Color(1, 1, 1));
     }
@@ -36,12 +37,14 @@ void Camera::Render(const Hittable& world) {
                   << "  Scanlines remaining: " << (image_height_ - j) << ' ' << std::flush;
 
         for (int i = 0; i < image_width_; ++i) {
-            const auto pixel_center = pixel00_loc_ + (i * pixel_delta_u_) + (j * pixel_delta_v_);
-            const auto ray_direction = pixel_center - camera_center_;
+            color::Color pixel_color{0, 0, 0};
 
-            Ray ray{camera_center_, ray_direction};
-            const color::Color pixel_color = RayColor(ray, world);
-            color::WriteColor(out_stream, pixel_color);
+            for (int sample = 0; sample < samples_per_pixel_; ++sample) {
+                const Ray ray = GetRay(i, j);
+                pixel_color += RayColor(ray, world);
+            }
+
+            color::WriteColor(out_stream, pixel_color, samples_per_pixel_);
         }
     }
 
@@ -79,4 +82,22 @@ void Camera::Init() {
         camera_center_ - Vector3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
 
     pixel00_loc_ = viewport_upper_left + 0.5 * (pixel_delta_u_ + pixel_delta_v_);
+}
+
+Ray Camera::GetRay(const int i, const int j) const {
+    // get randomly sampled camera rayfor the pixel at location i,j
+    const auto pixel_center = pixel00_loc_ + (i * pixel_delta_u_) + (j * pixel_delta_v_);
+    const auto pixel_sample = pixel_center + PixelSampleSquare();
+
+    const auto ray_origin = camera_center_;
+    const auto ray_direction = pixel_sample - ray_origin;
+
+    return {ray_origin, ray_direction};
+}
+
+// Returns a random point in the square surrounding a pixel at the origin
+Vector3 Camera::PixelSampleSquare() const {
+    const auto px = -0.5 + config::GetRandomDouble();
+    const auto py = -0.5 + config::GetRandomDouble();
+    return (px * pixel_delta_u_) + (py * pixel_delta_v_);
 }

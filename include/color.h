@@ -7,7 +7,7 @@
 namespace color {
 using Color = Vector3;
 
-void WriteColor(std::ofstream& outstream, const Color& pixel_color);
+void WriteColor(std::ofstream& outstream, const Color& pixel_color, int samples_per_pixel);
 }  // namespace color
 
 #endif  // RAYTRACINGINONEWEEKEND_COLOR_H

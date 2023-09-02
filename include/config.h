@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include <chrono>
+#include <random>
 #include <string_view>
 #include "color.h"
 
@@ -28,6 +29,11 @@ void CreateImageOutdir();
 void LogDuration(std::chrono::steady_clock::time_point start_time,
                  std::chrono::steady_clock::time_point end_time);
 
+inline double GetRandomDouble() {
+    static std::uniform_real_distribution<double> distribution{0.0, 1.0};
+    static std::mt19937 generator;
+    return distribution(generator);
+}
 }  // namespace config
 
 #endif  // CONFIG_H

@@ -15,7 +15,7 @@ class Interval {
 
     bool surrounds(double x) const { return min_ < x && x < max_; }
 
-    double clamp(double x) const {
+    inline double clamp(const double x) const {
         if (x < min_) {
             return min_;
         }

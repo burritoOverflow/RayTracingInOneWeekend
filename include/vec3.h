@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "config.h"
 
 class Vector3 {
    public:
@@ -38,6 +39,15 @@ class Vector3 {
     double Length() const { return std::sqrt(LengthSquared()); }
 
     double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
+
+    static inline Vector3 GenerateRandomVector() {
+        return {config::GetRandomDouble(), config::GetRandomDouble(), config::GetRandomDouble()};
+    }
+
+    static inline Vector3 GenerateRandomVector(const double min, const double max) {
+        return {config::GetRandomDouble(min, max), config::GetRandomDouble(min, max),
+                config::GetRandomDouble(min, max)};
+    }
 
    private:
     double e_[3];
@@ -90,6 +100,33 @@ inline Vector3 UnitVector(const Vector3 v) {
     // normalizing a vector - convert nonzero vector V to
     // a unit vector by dividing by the vector length
     return v / v.Length();
+}
+
+// repeatedly generate random samples until a valid one is generated (inside the unit sphere)
+// (see 9.1)
+static inline Vector3 VectorInUnitSphere() {
+    while (true) {
+        const auto p = Vector3::GenerateRandomVector(-1, 1);
+        if (p.LengthSquared() < 1)
+            return p;
+    }
+}
+
+// normalize to get a vector in the unit sphere
+static inline Vector3 RandomUnitVector() {
+    return UnitVector(VectorInUnitSphere());
+}
+
+static inline Vector3 RandomVectorOnHemisphere(const Vector3& normal_vector) {
+    Vector3 on_unit_sphere = RandomUnitVector();
+
+    // in the same hemisphere as the normal
+    if (Dot(on_unit_sphere, normal_vector) > 0.0) {
+        return on_unit_sphere;
+    } else {
+        // otherwise, invert the vector
+        return -on_unit_sphere;
+    }
 }
 
 using Point3 = Vector3;

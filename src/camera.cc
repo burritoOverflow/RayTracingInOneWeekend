@@ -7,7 +7,8 @@ color::Color Camera::RayColor(const Ray& ray, const Hittable& world) {
     HitRecord hit_record;
 
     if (world.Hit(ray, Interval(0, config::infinity), hit_record)) {
-        return 0.5 * (hit_record.normal_ + color::Color(1, 1, 1));
+        const Vector3 direction = RandomVectorOnHemisphere(hit_record.normal_);
+        return 0.5 * RayColor(Ray(hit_record.point_, direction), world);
     }
 
     // linearly blend white and blue, depending on height of the y-coord

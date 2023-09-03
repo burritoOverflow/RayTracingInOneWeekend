@@ -1,6 +1,7 @@
 #ifndef RAYTRACINGINONEWEEKEND_CAMERA_H
 #define RAYTRACINGINONEWEEKEND_CAMERA_H
 
+#include "color.h"
 #include "hittable.h"
 
 class Camera final {

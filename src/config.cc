@@ -1,5 +1,6 @@
 #include "config.h"
 #include <filesystem>
+#include <iostream>
 #include <string>
 #if defined(__APPLE__)
 #include <sstream>

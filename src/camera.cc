@@ -3,12 +3,18 @@
 #include <filesystem>
 #include "config.h"
 
-color::Color Camera::RayColor(const Ray& ray, const Hittable& world) {
+color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) {
     HitRecord hit_record;
 
-    if (world.Hit(ray, Interval(0, config::infinity), hit_record)) {
+    // if the ray bounce limit is exceeded, no more light is gathered
+    if (depth <= 0) {
+        return {0, 0, 0};
+    }
+
+    // see section 9.3 for this interval value
+    if (world.Hit(ray, Interval(0.001, config::infinity), hit_record)) {
         const Vector3 direction = RandomVectorOnHemisphere(hit_record.normal_);
-        return 0.5 * RayColor(Ray(hit_record.point_, direction), world);
+        return 0.5 * RayColor(Ray(hit_record.point_, direction), world, depth - 1);
     }
 
     // linearly blend white and blue, depending on height of the y-coord
@@ -42,7 +48,7 @@ void Camera::Render(const Hittable& world) {
 
             for (int sample = 0; sample < samples_per_pixel_; ++sample) {
                 const Ray ray = GetRay(i, j);
-                pixel_color += RayColor(ray, world);
+                pixel_color += RayColor(ray, world, max_recursion_depth_);
             }
 
             color::WriteColor(out_stream, pixel_color, samples_per_pixel_);

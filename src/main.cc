@@ -11,5 +11,6 @@ int main() {
     world.AddObject(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     Camera camera;
+    camera.SetMaxRecursionDepth(50);
     camera.Render(world);
 }

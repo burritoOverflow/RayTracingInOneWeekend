@@ -4,9 +4,6 @@
 #include <chrono>
 #include <random>
 #include <string_view>
-// #include "color.h"
-
-// see rationale for these constants in section 4.2
 
 namespace config {
 
@@ -29,13 +26,8 @@ void CreateImageOutdir();
 void LogDuration(std::chrono::steady_clock::time_point start_time,
                  std::chrono::steady_clock::time_point end_time);
 
-static inline double GetRandomDouble() {
-    static std::uniform_real_distribution<double> distribution{0.0, 1.0};
-    static std::mt19937 generator;
-    return distribution(generator);
-}
-
-static inline double GetRandomDouble(const double lower_bound, const double upper_bound) {
+static inline double GetRandomDouble(const double lower_bound = 0.0,
+                                     const double upper_bound = 1.0) {
     static std::uniform_real_distribution<double> distribution{lower_bound, upper_bound};
     static std::mt19937 generator;
     return distribution(generator);

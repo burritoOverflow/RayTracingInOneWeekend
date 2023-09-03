@@ -13,7 +13,8 @@ color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) 
 
     // see section 9.3 for this interval value
     if (world.Hit(ray, Interval(0.001, config::infinity), hit_record)) {
-        const Vector3 direction = RandomVectorOnHemisphere(hit_record.normal_);
+        // see 9.4 on Lambertian reflection for the rationale for adding the normal
+        const Vector3 direction = hit_record.normal_ + RandomVectorOnHemisphere(hit_record.normal_);
         return 0.5 * RayColor(Ray(hit_record.point_, direction), world, depth - 1);
     }
 

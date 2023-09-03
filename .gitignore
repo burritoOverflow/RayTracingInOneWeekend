@@ -58,3 +58,5 @@ _deps
 
 # contains debug and launch configurations
 !/.vscode
+
+.cache/

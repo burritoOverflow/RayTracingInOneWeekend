@@ -40,6 +40,11 @@ class Vector3 {
 
     double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
 
+    bool IsNearZero() const {
+        auto s = 1e-8;
+        return (fabs(e_[0]) < s) && (fabs(e_[1]) < s) && (fabs(e_[2]) < s);
+    }
+
     static inline Vector3 GenerateRandomVector() {
         return {config::GetRandomDouble(), config::GetRandomDouble(), config::GetRandomDouble()};
     }
@@ -127,6 +132,11 @@ static inline Vector3 RandomVectorOnHemisphere(const Vector3& normal_vector) {
         // otherwise, invert the vector
         return -on_unit_sphere;
     }
+}
+
+static inline Vector3 Reflect(const Vector3& v, const Vector3& n) {
+    // see 10.4
+    return v - 2 * Dot(v, n) * n;
 }
 
 using Point3 = Vector3;

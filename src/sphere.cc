@@ -3,9 +3,9 @@
 
 bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
-    const Vector3 oc = ray.Origin() - center_;
-    const auto a = ray.Direction().LengthSquared();
-    const auto half_b = Dot(oc, ray.Direction());
+    const Vector3 oc = ray.origin() - center_;
+    const auto a = ray.direction().LengthSquared();
+    const auto half_b = Dot(oc, ray.direction());
     const auto c = oc.LengthSquared() - radius_ * radius_;
     const auto discriminant = half_b * half_b - a * c;
 
@@ -32,6 +32,7 @@ bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // 6.4 front vs back faces
     const Vector3 outward_normal = (hit_record.point_ - center_) / radius_;
     hit_record.SetFaceNormal(ray, outward_normal);
+    hit_record.set_material(material_);
 
     return true;
 }

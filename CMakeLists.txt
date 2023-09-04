@@ -23,4 +23,4 @@ add_executable(ray_tracing_in_one_weekend ${SOURCES})
 target_include_directories(ray_tracing_in_one_weekend
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include
-        )
+)

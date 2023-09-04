@@ -2,6 +2,7 @@
 #include <chrono>
 #include <filesystem>
 #include "config.h"
+#include "material.h"
 
 color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) {
     HitRecord hit_record;
@@ -13,15 +14,18 @@ color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) 
 
     // see section 9.3 for this interval value
     if (world.Hit(ray, Interval(0.001, config::infinity), hit_record)) {
-        // see 9.4 on Lambertian reflection for the rationale for adding the normal
-        // illumination is proportional to the cos of the angle between the surface normal and
-        // light source (see pg 82 in "Fundamentals of Computer Graphics")
-        const Vector3 direction = hit_record.normal_ + RandomUnitVector();
-        return 0.1 * RayColor(Ray(hit_record.point_, direction), world, depth - 1);
+        Ray scattered{};
+        color::Color attenuation{};
+
+        if (hit_record.material_->Scatter(ray, hit_record, attenuation, scattered)) {
+            return attenuation * RayColor(scattered, world, depth - 1);
+        }
+
+        return color::Color{0, 0, 0};
     }
 
     // linearly blend white and blue, depending on height of the y-coord
-    const Vector3 unit_direction = UnitVector(ray.Direction());
+    const Vector3 unit_direction = UnitVector(ray.direction());
 
     // a from 0 to 1
     const auto a = 0.5 * (unit_direction.y() + 1.0);
@@ -105,7 +109,7 @@ Ray Camera::GetRay(const int i, const int j) const {
     return {ray_origin, ray_direction};
 }
 
-// Returns a random point in the square surrounding a pixel at the Origin
+// Returns a random point in the square surrounding a pixel at the origin
 Vector3 Camera::PixelSampleSquare() const {
     const auto px = -0.5 + config::GetRandomDouble();
     const auto py = -0.5 + config::GetRandomDouble();

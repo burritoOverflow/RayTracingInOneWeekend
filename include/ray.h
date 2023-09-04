@@ -12,14 +12,22 @@
  * changing t and P(t) moves the point along the ray
  *
  * see discussion in Section 4.1
+ *
+ * Alternatively, see pg 73 in "Fundamentals of Computer Graphics, 4th"
+ *
+ * p(t) = e + t(s - e)
+ * where - 'advance from e along the vector (s - e) a fractional distance t to find the
+ * point p
+ *
+ *  where e is the ray's Origin and (s - e) is the ray's Direction
  */
 class Ray {
    public:
     Ray() = default;
     Ray(const Point3& origin, const Vector3& direction) : origin_(origin), direction_(direction) {}
 
-    Point3 origin() const { return origin_; }
-    Vector3 direction() const { return direction_; }
+    Point3 Origin() const { return origin_; }
+    Vector3 Direction() const { return direction_; }
 
     // Implementation of the function that represents the ray: P(t) = A +tb
     Point3 at(double t) const { return origin_ + t * direction_; }

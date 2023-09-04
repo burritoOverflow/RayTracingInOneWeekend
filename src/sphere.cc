@@ -3,12 +3,13 @@
 
 bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
-    const Vector3 oc = ray.origin() - center_;
-    const auto a = ray.direction().LengthSquared();
-    const auto half_b = Dot(oc, ray.direction());
+    const Vector3 oc = ray.Origin() - center_;
+    const auto a = ray.Direction().LengthSquared();
+    const auto half_b = Dot(oc, ray.Direction());
     const auto c = oc.LengthSquared() - radius_ * radius_;
     const auto discriminant = half_b * half_b - a * c;
 
+    // point not on the surface (in the sphere)
     if (discriminant < 0) {
         return false;
     }

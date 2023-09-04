@@ -118,7 +118,7 @@ static inline Vector3 RandomUnitVector() {
 }
 
 static inline Vector3 RandomVectorOnHemisphere(const Vector3& normal_vector) {
-    Vector3 on_unit_sphere = RandomUnitVector();
+    const Vector3 on_unit_sphere = RandomUnitVector();
 
     // in the same hemisphere as the normal
     if (Dot(on_unit_sphere, normal_vector) > 0.0) {

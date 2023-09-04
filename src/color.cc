@@ -14,6 +14,11 @@ void color::WriteColor(std::ofstream& outstream,
     g *= scale;
     b *= scale;
 
+    // apply the linear to gamm transformation (see 9.5)
+    r = LinearToGamma(r);
+    g = LinearToGamma(g);
+    b = LinearToGamma(b);
+
     // write the translated[0, 255] for each color component (see 8.2)
     static const Interval intensity{0.000, 0.999};
 

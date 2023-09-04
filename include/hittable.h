@@ -12,8 +12,8 @@ struct HitRecord {
 
     // pre-condition: outward_normal is assumed to have unit length
     void SetFaceNormal(const Ray& ray, const Vector3& outward_normal) {
-        front_face_ = Dot(ray.direction(), outward_normal) < 0;
-        normal_ = front_face_ ? outward_normal : -outward_normal;
+        this->front_face_ = Dot(ray.Direction(), outward_normal) < 0;
+        this->normal_ = this->front_face_ ? outward_normal : -outward_normal;
     }
 };
 

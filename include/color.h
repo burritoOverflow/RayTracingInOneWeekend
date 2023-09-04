@@ -7,6 +7,10 @@
 namespace color {
 using Color = Vector3;
 
+static inline double LinearToGamma(const double linear_component) {
+    return sqrt(linear_component);
+}
+
 void WriteColor(std::ofstream& outstream, const Color& pixel_color, int samples_per_pixel);
 }  // namespace color
 

@@ -1,8 +1,6 @@
 #ifndef RAYTRACINGINONEWEEKEND_SPHERE_H
 #define RAYTRACINGINONEWEEKEND_SPHERE_H
 
-#include <utility>
-
 #include "hittable.h"
 #include "material.h"
 #include "vec3.h"

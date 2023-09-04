@@ -26,8 +26,8 @@ void config::CreateImageOutdir() {
     }
 }
 
-void config::LogDuration(std::chrono::steady_clock::time_point start_time,
-                         std::chrono::steady_clock::time_point end_time) {
+void config::LogDuration(const std::chrono::steady_clock::time_point start_time,
+                         const std::chrono::steady_clock::time_point end_time) {
     const auto total_time = end_time - start_time;
     const auto elapsed_ms =
         std::chrono::duration_cast<std::chrono::milliseconds>(total_time).count();

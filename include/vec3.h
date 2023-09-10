@@ -139,6 +139,14 @@ static inline Vector3 Reflect(const Vector3& v, const Vector3& n) {
     return v - 2 * Dot(v, n) * n;
 }
 
+// see 11.2
+static inline Vector3 Refract(const Vector3& uv, const Vector3& n, const double etai_over_etat) {
+    auto cos_theta = fmin(Dot(-uv, n), 1.0);
+    Vector3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+    Vector3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.LengthSquared())) * n;
+    return r_out_perp + r_out_parallel;
+}
+
 using Point3 = Vector3;
 
 #endif  // RAYTRACINGINONEWEEKEND_VEC3_H

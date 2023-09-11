@@ -14,7 +14,7 @@ class HittableList final : public Hittable {
     bool Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const override;
 
    private:
-    std::vector<std::shared_ptr<Hittable>> objects;
+    std::vector<std::shared_ptr<Hittable>> objects_;
 };
 
 #endif  // HITTABLE_LIST_H

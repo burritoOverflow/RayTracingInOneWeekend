@@ -78,7 +78,7 @@ void Camera::Init() {
     // see viewing geometry in section 12.1
     const auto focal_length = (this->look_from_ - this->look_at_).Length();
 
-    const auto theta = config::DegreesToRadians(vertical_field_of_view_);
+    const auto theta = config::DegreesToRadians(this->vertical_field_of_view_);
     const auto h = tan(theta / 2);
 
     const auto viewport_height = 2 * h * focal_length;

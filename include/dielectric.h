@@ -13,8 +13,8 @@ class Dielectric final : public Material {
                         color::Color& attenuation,
                         Ray& scattered) const override {
         attenuation = color::Color(1.0, 1.0, 1.0);
+        const double refraction_ratio = hit_record.has_front_face_ ? (1.0 / ir_) : ir_;
 
-        const double refraction_ratio = hit_record.front_face_ ? (1.0 / ir_) : ir_;
         const Vector3 unit_direction = UnitVector(ray.direction());
         const double cos_theta = fmin(Dot(-unit_direction, hit_record.normal_), 1.0);
         const double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
@@ -24,7 +24,7 @@ class Dielectric final : public Material {
         // see 11.3 for details
         // check if equality between the two sides of the equation is broken
         // if so, it must reflect (solution does not exist)
-        const bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+        const bool cannot_refract = (refraction_ratio * sin_theta) > 1.0;
 
         if (cannot_refract ||
             Reflectance(cos_theta, refraction_ratio) > config::GetRandomDouble()) {

@@ -22,7 +22,7 @@ int main() {
     world.AddObject(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Camera camera;
-    camera.SetVerticalFieldOfView(90);
+    camera.SetVerticalFieldOfView(20);
 
     Point3 look_from = Point3(-2, 2, 1);
     Point3 look_at = Point3(0, 0, -1);

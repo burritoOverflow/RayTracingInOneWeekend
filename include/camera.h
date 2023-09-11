@@ -12,6 +12,8 @@ class Camera final {
         this->max_recursion_depth_ = max_recursion_depth;
     }
 
+    void SetVerticalFieldOfView(const double v_fov) { this->vertical_field_of_view_ = v_fov; }
+
    private:
     double aspect_ratio_ = 16.0 / 9.0;  // ratio of image width over height
     int image_width_ = 1000;            // rendered image width in pixel count
@@ -22,6 +24,8 @@ class Camera final {
     Vector3 pixel_delta_v_;         // delta_v - distance between pixels on the y-axis
     int samples_per_pixel_ = 100;   // count of random samples per pixel
     int max_recursion_depth_ = 10;  // limit the number of ray bounces in the scene
+    double
+        vertical_field_of_view_;  // visual angle from end-to-end of the image specified in degrees
 
     void Init();
 

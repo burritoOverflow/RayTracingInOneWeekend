@@ -74,9 +74,14 @@ void Camera::Init() {
     image_height_ = static_cast<int>(image_width_ / aspect_ratio_);
 
     // viewport dimension determination
-    auto viewport_height = 2.0;
-    auto viewport_width = viewport_height * (static_cast<double>(image_width_) / image_height_);
-    auto focal_length = 1.0;
+    // see viewing geometry in section 12.1
+    const auto focal_length = 1.0;
+    const auto theta = config::DegreesToRadians(vertical_field_of_view_);
+    const auto h = tan(theta / 2);
+
+    const auto viewport_height = 2 * h * focal_length;
+    const auto viewport_width =
+        viewport_height * (static_cast<double>(image_width_) / image_height_);
 
     // v_u - vector from the left to the right edge
     const auto viewport_u = Vector3(viewport_width, 0, 0);

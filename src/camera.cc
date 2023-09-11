@@ -71,34 +71,41 @@ void Camera::Render(const Hittable& world) {
 }
 
 void Camera::Init() {
-    image_height_ = static_cast<int>(image_width_ / aspect_ratio_);
+    this->camera_center_ = this->look_from_;
+    this->image_height_ = static_cast<int>(image_width_ / aspect_ratio_);
 
     // viewport dimension determination
     // see viewing geometry in section 12.1
-    const auto focal_length = 1.0;
+    const auto focal_length = (this->look_from_ - this->look_at_).Length();
+
     const auto theta = config::DegreesToRadians(vertical_field_of_view_);
     const auto h = tan(theta / 2);
 
     const auto viewport_height = 2 * h * focal_length;
     const auto viewport_width =
-        viewport_height * (static_cast<double>(image_width_) / image_height_);
+        viewport_height * (static_cast<double>(this->image_width_) / this->image_height_);
 
-    // v_u - vector from the left to the right edge
-    const auto viewport_u = Vector3(viewport_width, 0, 0);
+    this->w_ = UnitVector(this->look_from_ - this->look_at_);
+    this->u_ = UnitVector(Cross(this->v_up_, this->w_));
+    this->v_ = Cross(this->w_, this->u_);
 
-    // v_v - vector from the upper edge to the lower edge
-    // y increases down the image
-    const auto viewport_v = Vector3(0, -viewport_height, 0);
+    // calc vectors across the horizontal and down the vertical viewport edges
+
+    // vector across viewport horizontal edge
+    const auto viewport_u = viewport_width * this->u_;
+
+    // vector across viewport vertical edge
+    const auto viewport_v = viewport_height * -this->v_;
 
     // delta_u - distance between pixels on the x-axis
-    pixel_delta_u_ = viewport_u / image_width_;
+    pixel_delta_u_ = viewport_u / this->image_width_;
 
     // delta_v - distance between pixels on the y-axis
-    pixel_delta_v_ = viewport_v / image_height_;
+    pixel_delta_v_ = viewport_v / this->image_height_;
 
     // location of the upper left pixel - x = 0, y = 0
     const auto viewport_upper_left =
-        camera_center_ - Vector3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+        camera_center_ - (focal_length * this->w_) - viewport_u / 2 - viewport_v / 2;
 
     pixel00_loc_ = viewport_upper_left + 0.5 * (pixel_delta_u_ + pixel_delta_v_);
 }

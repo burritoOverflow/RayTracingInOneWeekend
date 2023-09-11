@@ -22,7 +22,18 @@ int main() {
     world.AddObject(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Camera camera;
-    camera.SetVerticalFieldOfView(90);  // 90 degree field of view
+    camera.SetVerticalFieldOfView(90);
+
+    Point3 look_from = Point3(-2, 2, 1);
+    Point3 look_at = Point3(0, 0, -1);
+
+    camera.SetLookFrom(std::move(look_from));
+    camera.SetLookAt(std::move(look_at));
+
+    Vector3 v_up = Vector3(0, 1, 0);
+    camera.SetViewUpVector(std::move(v_up));
+
     camera.SetMaxRecursionDepth(50);
+
     camera.Render(world);
 }

@@ -27,13 +27,16 @@ int main() {
     Point3 look_from = Point3(-2, 2, 1);
     Point3 look_at = Point3(0, 0, -1);
 
-    camera.SetLookFrom(std::move(look_from));
-    camera.SetLookAt(std::move(look_at));
+    camera.SetLookFrom(look_from);
+    camera.SetLookAt(look_at);
 
     Vector3 v_up = Vector3(0, 1, 0);
-    camera.SetViewUpVector(std::move(v_up));
+    camera.SetViewUpVector(v_up);
 
     camera.SetMaxRecursionDepth(50);
+
+    camera.SetDefocusAngle(10.0);
+    camera.SetFocusDistance(3.4);
 
     camera.Render(world);
 }

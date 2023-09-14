@@ -34,11 +34,13 @@ class Vector3 {
 
     Vector3& operator/=(double d) { return *this *= 1 / d; }
 
-    // length (or norm) of a vector is the square root of the sum of the squares of its
-    // entries, i.e sqrt(x^2 + y^2 + z^2)
+    // length (or norm) of a vector is the square root of the sum of the squares of
+    // its entries, i.e sqrt(x^2 + y^2 + z^2)
     double Length() const { return std::sqrt(LengthSquared()); }
 
-    double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
+    double LengthSquared() const {
+        return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2];
+    }
 
     bool IsNearZero() const {
         auto s = 1e-8;
@@ -46,7 +48,8 @@ class Vector3 {
     }
 
     static inline Vector3 GenerateRandomVector() {
-        return {config::GetRandomDouble(), config::GetRandomDouble(), config::GetRandomDouble()};
+        return {config::GetRandomDouble(), config::GetRandomDouble(),
+                config::GetRandomDouble()};
     }
 
     static inline Vector3 GenerateRandomVector(const double min, const double max) {
@@ -107,11 +110,21 @@ inline Vector3 UnitVector(const Vector3 v) {
     return v / v.Length();
 }
 
-// repeatedly generate random samples until a valid one is generated (inside the unit sphere)
-// (see 9.1)
+// repeatedly generate random samples until a valid one is generated (inside the unit
+// sphere) (see 9.1)
 static inline Vector3 VectorInUnitSphere() {
     while (true) {
         const auto p = Vector3::GenerateRandomVector(-1, 1);
+        if (p.LengthSquared() < 1)
+            return p;
+    }
+}
+
+static inline Vector3 RandomInUnitDisk() {
+    while (true) {
+        const auto p = Vector3(config::GetRandomDouble(-1, 1),
+                               config::GetRandomDouble(-1, 1), 0);
+
         if (p.LengthSquared() < 1)
             return p;
     }
@@ -140,7 +153,9 @@ static inline Vector3 Reflect(const Vector3& v, const Vector3& n) {
 }
 
 // see 11.2
-static inline Vector3 Refract(const Vector3& uv, const Vector3& n, const double etai_over_etat) {
+static inline Vector3 Refract(const Vector3& uv,
+                              const Vector3& n,
+                              const double etai_over_etat) {
     auto cos_theta = fmin(Dot(-uv, n), 1.0);
     Vector3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
     Vector3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.LengthSquared())) * n;

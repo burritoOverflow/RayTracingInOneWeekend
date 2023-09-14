@@ -3,7 +3,7 @@ BasedOnStyle: Chromium
 IndentWidth: 4
 TabWidth: 4
 NamespaceIndentation: None
-ColumnLimit: 100
+ColumnLimit: 111
 ReflowComments: true
 UseTab: Never
 PointerAlignment: Left

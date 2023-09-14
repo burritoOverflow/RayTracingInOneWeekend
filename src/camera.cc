@@ -105,6 +105,7 @@ void Camera::Init() {
 
     pixel00_loc_ = viewport_upper_left + 0.5 * (pixel_delta_u_ + pixel_delta_v_);
 
+    // calculate the defocus disk basis vectors
     const auto defocus_radius =
         this->focus_distance_ * tan(config::DegreesToRadians(this->defocus_angle_ / 2));
 
@@ -112,8 +113,9 @@ void Camera::Init() {
     this->defocus_disk_v_ = defocus_radius * this->v_;
 }
 
+// get randomly sampled camera ray for the pixel at location i,j
+// originates from the defocus disk
 Ray Camera::GetRay(const int i, const int j) const {
-    // get randomly sampled camera rayfor the pixel at location i,j
     const auto pixel_center = pixel00_loc_ + (i * pixel_delta_u_) + (j * pixel_delta_v_);
     const auto pixel_sample = pixel_center + PixelSampleSquare();
 

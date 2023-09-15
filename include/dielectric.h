@@ -26,8 +26,7 @@ class Dielectric final : public Material {
         // if so, it must reflect (solution does not exist)
         const bool cannot_refract = (refraction_ratio * sin_theta) > 1.0;
 
-        if (cannot_refract ||
-            Reflectance(cos_theta, refraction_ratio) > config::GetRandomDouble()) {
+        if (cannot_refract || Reflectance(cos_theta, refraction_ratio) > config::GetRandomDouble()) {
             direction = Reflect(unit_direction, hit_record.normal_);
         } else {
             direction = Refract(unit_direction, hit_record.normal_, refraction_ratio);

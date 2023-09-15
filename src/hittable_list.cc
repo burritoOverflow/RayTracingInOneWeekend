@@ -1,7 +1,7 @@
 #include "hittable_list.h"
 
 void HittableList::AddObject(const std::shared_ptr<Hittable>& object) {
-    objects_.push_back(object);
+    this->objects_.push_back(object);
 }
 
 bool HittableList::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {

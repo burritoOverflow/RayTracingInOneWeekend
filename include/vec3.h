@@ -38,9 +38,7 @@ class Vector3 {
     // its entries, i.e sqrt(x^2 + y^2 + z^2)
     double Length() const { return std::sqrt(LengthSquared()); }
 
-    double LengthSquared() const {
-        return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2];
-    }
+    double LengthSquared() const { return e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2]; }
 
     bool IsNearZero() const {
         auto s = 1e-8;
@@ -48,8 +46,7 @@ class Vector3 {
     }
 
     static inline Vector3 GenerateRandomVector() {
-        return {config::GetRandomDouble(), config::GetRandomDouble(),
-                config::GetRandomDouble()};
+        return {config::GetRandomDouble(), config::GetRandomDouble(), config::GetRandomDouble()};
     }
 
     static inline Vector3 GenerateRandomVector(const double min, const double max) {
@@ -99,8 +96,7 @@ inline double Dot(const Vector3& u, const Vector3& v) {
  *  | UxVy - UyVx |
  */
 inline Vector3 Cross(const Vector3& u, const Vector3& v) {
-    return {u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(),
-            u.x() * v.y() - u.y() * v.x()};
+    return {u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(), u.x() * v.y() - u.y() * v.x()};
 }
 
 // unit vector - vector whose length is 1
@@ -122,8 +118,7 @@ static inline Vector3 VectorInUnitSphere() {
 
 static inline Vector3 RandomInUnitDisk() {
     while (true) {
-        const auto p = Vector3(config::GetRandomDouble(-1, 1),
-                               config::GetRandomDouble(-1, 1), 0);
+        const auto p = Vector3(config::GetRandomDouble(-1, 1), config::GetRandomDouble(-1, 1), 0);
 
         if (p.LengthSquared() < 1)
             return p;
@@ -153,9 +148,7 @@ static inline Vector3 Reflect(const Vector3& v, const Vector3& n) {
 }
 
 // see 11.2
-static inline Vector3 Refract(const Vector3& uv,
-                              const Vector3& n,
-                              const double etai_over_etat) {
+static inline Vector3 Refract(const Vector3& uv, const Vector3& n, const double etai_over_etat) {
     auto cos_theta = fmin(Dot(-uv, n), 1.0);
     Vector3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
     Vector3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.LengthSquared())) * n;

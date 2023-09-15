@@ -24,14 +24,14 @@ class Camera final {
 
    private:
     double aspect_ratio_ = 16.0 / 9.0;  // ratio of image width over height
-    int image_width_ = 1000;            // rendered image width in pixel count
+    int image_width_ = 1200;            // rendered image width in pixel count
     int image_height_;                  // rendered image height
     Point3 camera_center_;
     Point3 pixel00_loc_;             // location of pixel 0,0
     Vector3 pixel_delta_u_;          // delta_u - distance between pixels on the x-axis
     Vector3 pixel_delta_v_;          // delta_v - distance between pixels on the y-axis
-    int samples_per_pixel_ = 100;    // count of random samples per pixel
-    int max_recursion_depth_ = 10;   // limit the number of ray bounces in the scene
+    int samples_per_pixel_ = 500;    // count of random samples per pixel
+    int max_recursion_depth_ = 50;   // limit the number of ray bounces in the scene
     double vertical_field_of_view_;  // visual angle from end-to-end of the image
                                      // specified in degrees
 

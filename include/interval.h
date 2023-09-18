@@ -8,11 +8,10 @@ class Interval {
     Interval() : min_(+config::infinity), max_(-config::infinity) {}
     Interval(double min, double max) : min_(min), max_(max) {}
 
-    const double min() const { return min_; }
-    const double max() const { return max_; }
+    double min() const { return min_; }
+    double max() const { return max_; }
 
     bool contains(double x) const { return min_ <= x && x <= max_; }
-
     bool surrounds(double x) const { return min_ < x && x < max_; }
 
     inline double clamp(const double x) const {

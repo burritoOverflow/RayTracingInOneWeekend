@@ -26,9 +26,11 @@ void CreateImageOutdir();
 void LogDuration(std::chrono::steady_clock::time_point start_time,
                  std::chrono::steady_clock::time_point end_time);
 
-static inline double GetRandomDouble(const double lower_bound = 0.0,
-                                     const double upper_bound = 1.0) {
-    return lower_bound + (upper_bound - lower_bound) * rand() / (RAND_MAX + 1.0);
+static inline double GetRandomDouble(const double lower_bound = 0.0, const double upper_bound = 1.0) {
+    static std::uniform_real_distribution<double> distribution{lower_bound, upper_bound};
+    static std::random_device dev;
+    static std::mt19937 generator(dev());
+    return distribution(generator);
 }
 }  // namespace config
 

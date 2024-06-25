@@ -32,7 +32,7 @@ class Dielectric final : public Material {
             direction = Refract(unit_direction, hit_record.normal_, refraction_ratio);
         }
 
-        scattered = Ray(hit_record.point_, direction);
+        scattered = Ray(hit_record.point_, direction, ray.time());
 
         return true;
     }

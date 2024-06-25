@@ -13,7 +13,7 @@ class Metal final : public Material {
                         color::Color& attenuation,
                         Ray& scattered) const override {
         Vector3 reflected = Reflect(UnitVector(ray.direction()), hit_record.normal_);
-        scattered = Ray(hit_record.point_, reflected + fuzz_ * RandomUnitVector());
+        scattered = Ray(hit_record.point_, reflected, ray.time());
         attenuation = albedo_;
 
         return (Dot(scattered.direction(), hit_record.normal_) > 0);

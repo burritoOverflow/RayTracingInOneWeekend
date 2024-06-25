@@ -6,10 +6,11 @@ build_xcode/
 # outdir for generated images
 images/
 
-# image formats 
+# image formats
 *.ppm
 
 cmake-build-debug/
+cmake-build-relwithdebinfo/
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

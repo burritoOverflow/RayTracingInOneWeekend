@@ -57,7 +57,6 @@ void Camera::Render(const Hittable& world) {
                 const Ray ray = GetRay(i, j);
                 pixel_color += RayColor(ray, world, max_recursion_depth_);
             }
-
             color::WriteColor(out_stream, pixel_color, samples_per_pixel_);
         }
     }
@@ -122,7 +121,9 @@ Ray Camera::GetRay(const int i, const int j) const {
     const auto ray_origin = (this->defocus_angle_ <= 0) ? this->camera_center_ : DefocusDiskSample();
     const auto ray_direction = pixel_sample - ray_origin;
 
-    return {ray_origin, ray_direction};
+    // lanuch ray with random 'times' in [0,1]
+    const auto ray_time = config::GetRandomDouble();
+    return {ray_origin, ray_direction, ray_time};
 }
 
 // get a random point in the camera defocus disk

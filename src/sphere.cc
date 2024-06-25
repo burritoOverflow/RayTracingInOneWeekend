@@ -1,9 +1,13 @@
 #include "sphere.h"
 #include "interval.h"
+#include "vec3.h"
 
 bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // see walkthrough in section 5.1 (and the subsequent changes in section 6.2)
-    const Vector3 oc = ray.origin() - center_;
+    const Point3 center = this->is_moving_ ? GetSphereCenter(ray.time()) : this->center_;
+    // TODO - why is this subtraction backwards? (see original:
+    // https://github.com/RayTracing/raytracing.github.io/blob/release/src/InOneWeekend/sphere.h#L23)
+    const Vector3 oc = ray.origin() - center;
     const auto a = ray.direction().LengthSquared();
     const auto half_b = Dot(oc, ray.direction());
     const auto c = oc.LengthSquared() - radius_ * radius_;

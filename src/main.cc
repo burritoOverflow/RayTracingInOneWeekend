@@ -1,7 +1,10 @@
+#include <memory>
 #include "camera.h"
+#include "config.h"
 #include "dielectric.h"
 #include "hittable_list.h"
 #include "lambertian.h"
+#include "material.h"
 #include "metal.h"
 #include "sphere.h"
 #include "vec3.h"
@@ -9,8 +12,9 @@
 static HittableList GenerateRandomWorld() {
     HittableList world;
 
-    const auto ground_material = std::make_shared<Lambertian>(color::Color(0.5, 0.5, 0.5));
-    world.AddObject(std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_material));
+    std::shared_ptr<Material> ground_material = std::make_shared<Lambertian>(color::Color(0.5, 0.5, 0.5));
+    auto center_point = Point3(0, -1000, 0);
+    world.AddObject(std::make_shared<Sphere>(center_point, 1000, ground_material));
 
     for (int i = -11; i <= 11; ++i) {
         for (int j = -11; j <= 11; ++j) {
@@ -20,30 +24,40 @@ static HittableList GenerateRandomWorld() {
             if ((center - Point3(4, 0.2, 0)).Length() > 0.9) {
                 if (choose_material < 0.8) {
                     // diffuse
-                    auto albedo = Vector3::GenerateRandomVector() * Vector3::GenerateRandomVector();
-                    world.AddObject(
-                        std::make_shared<Sphere>(center, 0.2, std::make_shared<Lambertian>(albedo)));
+                    const auto albedo = Vector3::GenerateRandomVector() * Vector3::GenerateRandomVector();
+                    const std::shared_ptr<Material> sphere_material = std::make_shared<Lambertian>(albedo);
+                    world.AddObject(std::make_shared<Sphere>(center, 0.2, sphere_material));
+
+                    // see section 2.6 in `TheNextWeek`
+                    // each Sphere moves from center C at time t==0 to C + (0, r/2, 0) at time t==1
+                    const auto center2 = center + Vector3(0, config::GetRandomDouble(0, 0.5), 0);
+                    world.AddObject(std::make_shared<Sphere>(center, center2, 0.2, sphere_material));
                 } else if (choose_material < 0.95) {
                     // metal
-                    auto albedo = Vector3::GenerateRandomVector(0.5, 1);
-                    auto fuzz = config::GetRandomDouble(0, 0.5);
-                    world.AddObject(
-                        std::make_shared<Sphere>(center, 0.2, std::make_shared<Metal>(albedo, fuzz)));
+                    const auto albedo = Vector3::GenerateRandomVector(0.5, 1);
+                    const auto fuzz = config::GetRandomDouble(0, 0.5);
+                    const std::shared_ptr<Material> metal_ptr = std::make_shared<Metal>(albedo, fuzz);
+                    world.AddObject(std::make_shared<Sphere>(center, 0.2, metal_ptr));
                 } else {
                     // glass
-                    world.AddObject(std::make_shared<Sphere>(center, 0.2, std::make_shared<Dielectric>(1.5)));
+                    const std::shared_ptr<Material> dielectric_ptr = std::make_shared<Dielectric>(1.5);
+                    world.AddObject(std::make_shared<Sphere>(center, 0.2, dielectric_ptr));
                 }
             }
         }  // end inner loop
     }      // end outer loop
 
-    world.AddObject(std::make_shared<Sphere>(Point3(0, 1, 0), 1.0, std::make_shared<Dielectric>(1.5)));
+    const std::shared_ptr<Material> dielectric_material_ptr = std::make_shared<Dielectric>(1.5);
+    const auto point1 = Point3(0, 1, 0);
+    world.AddObject(std::make_shared<Sphere>(point1, 1.0, dielectric_material_ptr));
 
-    world.AddObject(std::make_shared<Sphere>(Point3(-4, 1, 0), 1.0,
-                                             std::make_shared<Lambertian>(color::Color(0.4, 0.2, 0.1))));
+    const std::shared_ptr<Material> lambertian_ptr = std::make_shared<Lambertian>(color::Color(0.4, 0.2, 0.1));
+    const auto point2 = Point3(-4, 1, 0);
+    world.AddObject(std::make_shared<Sphere>(point2, 1.0, lambertian_ptr));
 
-    world.AddObject(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0,
-                                             std::make_shared<Metal>(color::Color(0.7, 0.6, 0.5), 0.0)));
+    const std::shared_ptr<Material> metal_ptr = std::make_shared<Metal>(color::Color(0.7, 0.6, 0.5), 0.0);
+    const auto point3 = Point3(4, 1, 0);
+    world.AddObject(std::make_shared<Sphere>(point3, 1.0, metal_ptr));
 
     return world;
 }

@@ -18,9 +18,8 @@ class Lambertian final : public Material {
             scatter_direction = hit_record.normal_;
         }
 
-        scattered = Ray(hit_record.point_, scatter_direction);
+        scattered = Ray(hit_record.point_, scatter_direction, ray.time());
         attenuation = albedo_;
-
         return true;
     }
 

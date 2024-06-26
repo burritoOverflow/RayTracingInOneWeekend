@@ -14,6 +14,7 @@ bool AxisAlignedBoundingBox::Hit(const Ray& ray, Interval& ray_t) {
         const auto t0 = (ax.Min() - ray_origin[axis]) * adinv;
         const auto t1 = (ax.Max() - ray_origin[axis]) * adinv;
 
+        // set the Interval's Min and Max values
         if (t0 < t1) {
             if (t0 > ray_t.Min()) {
                 ray_t.Min(t0);

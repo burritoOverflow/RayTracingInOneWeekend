@@ -6,7 +6,13 @@
 class Interval {
    public:
     Interval() : min_(+config::infinity), max_(-config::infinity) {}
+
     Interval(double min, double max) : min_(min), max_(max) {}
+
+    Interval(const Interval& a, const Interval& b) {
+        min_ = a.min_ <= b.min_ ? a.min_ : b.min_;
+        max_ = a.max_ >= b.max_ ? a.max_ : b.max_;
+    }
 
     double Min() const { return min_; }
     void Min(const double min) { this->min_ = min; }

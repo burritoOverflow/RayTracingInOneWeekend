@@ -2,6 +2,7 @@
 #define RAYTRACINGINONEWEEKEND_HITTABLE_H
 
 #include <memory>
+#include "aabb.h"
 #include "interval.h"
 #include "ray.h"
 
@@ -26,6 +27,8 @@ struct HitRecord {
 class Hittable {
    public:
     virtual bool Hit(const Ray& ray, Interval ray_t, HitRecord& hitRecord) const = 0;
+
+    virtual AxisAlignedBoundingBox BoundingBox() const = 0;
 
     virtual ~Hittable() = default;
 };

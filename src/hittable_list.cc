@@ -1,7 +1,10 @@
 #include "hittable_list.h"
+#include "aabb.h"
 
 void HittableList::AddObject(const std::shared_ptr<Hittable>& object) {
     this->objects_.push_back(object);
+    // update box incrementally as each new child is added
+    this->bbox_ = AxisAlignedBoundingBox(this->bbox_, object->BoundingBox());
 }
 
 bool HittableList::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {

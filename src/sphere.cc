@@ -23,10 +23,10 @@ bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // find the nearest root in the range (see 6.3)
     auto root = (-half_b - sqrtd) / a;
 
-    if (!ray_t.surrounds(root)) {
+    if (!ray_t.Surrounds(root)) {
         root = (-half_b + sqrtd) / a;
 
-        if (!ray_t.surrounds(root))
+        if (!ray_t.Surrounds(root))
             return false;
     }
 

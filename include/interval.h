@@ -8,13 +8,16 @@ class Interval {
     Interval() : min_(+config::infinity), max_(-config::infinity) {}
     Interval(double min, double max) : min_(min), max_(max) {}
 
-    double min() const { return min_; }
-    double max() const { return max_; }
+    double Min() const { return min_; }
+    void Min(const double min) { this->min_ = min; }
 
-    bool contains(double x) const { return min_ <= x && x <= max_; }
-    bool surrounds(double x) const { return min_ < x && x < max_; }
+    double Max() const { return max_; }
+    void Max(const double max) { this->max_ = max; }
 
-    inline double clamp(const double x) const {
+    bool Contains(double x) const { return min_ <= x && x <= max_; }
+    bool Surrounds(double x) const { return min_ < x && x < max_; }
+
+    inline double Clamp(const double x) const {
         if (x < min_) {
             return min_;
         }
@@ -24,6 +27,12 @@ class Interval {
         }
 
         return x;
+    }
+
+    // create a new interval padded by delta (see section 3.4) from an existing Interval
+    inline static Interval Expand(const Interval& interval, const double delta) {
+        const auto padding = delta / 2;
+        return Interval(interval.Min() - padding, interval.Max() + padding);
     }
 
    private:

@@ -1,9 +1,7 @@
 #include "color.h"
 #include "interval.h"
 
-void color::WriteColor(std::ofstream& out_stream,
-                       const Color& pixel_color,
-                       const int samples_per_pixel) {
+void color::WriteColor(std::ofstream& out_stream, const Color& pixel_color, const int samples_per_pixel) {
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
@@ -22,7 +20,7 @@ void color::WriteColor(std::ofstream& out_stream,
     // write the translated[0, 255] for each color component (see 8.2)
     static const Interval intensity{0.000, 0.999};
 
-    out_stream << static_cast<int>(255.999 * intensity.clamp(r)) << ' '
-               << static_cast<int>(255.999 * intensity.clamp(g)) << ' '
-               << static_cast<int>(255.999 * intensity.clamp(b)) << '\n';
+    out_stream << static_cast<int>(255.999 * intensity.Clamp(r)) << ' '
+               << static_cast<int>(255.999 * intensity.Clamp(g)) << ' '
+               << static_cast<int>(255.999 * intensity.Clamp(b)) << '\n';
 }

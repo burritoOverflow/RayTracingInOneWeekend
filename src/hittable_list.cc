@@ -7,10 +7,10 @@ void HittableList::AddObject(const std::shared_ptr<Hittable>& object) {
 bool HittableList::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     HitRecord temp_record;
     bool did_hit_anything{false};
-    double closest_so_far{ray_t.max()};
+    double closest_so_far{ray_t.Max()};
 
     for (const auto& object : objects_) {
-        Interval interval{ray_t.min(), closest_so_far};
+        Interval interval{ray_t.Min(), closest_so_far};
 
         if (object->Hit(ray, interval, temp_record)) {
             did_hit_anything = true;

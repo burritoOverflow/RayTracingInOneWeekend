@@ -20,6 +20,7 @@ set(SOURCES
         src/color.cc
         src/config.cc
         src/aabb.cc
+        src/bvhnode.cc
         src/main.cc)
 
 add_executable(ray_tracing_in_one_weekend ${SOURCES})

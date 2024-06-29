@@ -26,7 +26,7 @@ struct HitRecord {
 
 class Hittable {
    public:
-    virtual bool Hit(const Ray& ray, Interval ray_t, HitRecord& hitRecord) const = 0;
+    virtual bool Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const = 0;
 
     virtual AxisAlignedBoundingBox BoundingBox() const = 0;
 

@@ -32,6 +32,11 @@ static inline double GetRandomDouble(const double lower_bound = 0.0, const doubl
     static std::mt19937 generator(dev());
     return distribution(generator);
 }
+
+static inline int GetRandomInt(const int min, const int max) {
+    return static_cast<int>(GetRandomDouble(min, max + 1));
+}
+
 }  // namespace config
 
 #endif  // RAYTRACINGINONEWEEKEND_CONFIG_H

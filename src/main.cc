@@ -1,4 +1,5 @@
 #include <memory>
+#include "bvhnode.h"
 #include "camera.h"
 #include "config.h"
 #include "dielectric.h"
@@ -59,6 +60,8 @@ static HittableList GenerateRandomWorld() {
     const auto point3 = Point3(4, 1, 0);
     world.AddObject(std::make_shared<Sphere>(point3, 1.0, metal_ptr));
 
+    // addition of BVHNode
+    world = HittableList{std::make_shared<BoundingVolumeHierarchyNode>(world)};
     return world;
 }
 

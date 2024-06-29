@@ -18,6 +18,8 @@ class HittableList final : public Hittable {
 
     AxisAlignedBoundingBox BoundingBox() const override { return this->bbox_; }
 
+    std::vector<std::shared_ptr<Hittable>>& GetObjects() { return this->objects_; }
+
    private:
     std::vector<std::shared_ptr<Hittable>> objects_;
     AxisAlignedBoundingBox bbox_;

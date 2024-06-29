@@ -36,10 +36,16 @@ class AxisAlignedBoundingBox {
         return x_;
     }
 
-    bool Hit(const Ray& ray, Interval& ray_t);
+    bool Hit(const Ray& ray, Interval& ray_t) const;
 
    private:
     Interval x_, y_, z_;
+
+    int GetLongestAxis() const {
+        if (this->x_.) {
+        statements
+        }
+    }
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_AABB_H

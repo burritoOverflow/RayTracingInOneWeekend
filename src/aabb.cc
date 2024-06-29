@@ -3,7 +3,7 @@
 #include "vec3.h"
 
 // see section 3.4 in `TheNextWeek`
-bool AxisAlignedBoundingBox::Hit(const Ray& ray, Interval& ray_t) {
+bool AxisAlignedBoundingBox::Hit(const Ray& ray, Interval& ray_t) const {
     const Point3& ray_origin = ray.origin();
     const Vector3& ray_direction = ray.direction();
 

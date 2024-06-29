@@ -35,6 +35,8 @@ class Interval {
         return x;
     }
 
+    inline double GetSize() const { return this->max_ - this->min_; }
+
     // create a new interval padded by delta (see section 3.4) from an existing Interval
     inline static Interval Expand(const Interval& interval, const double delta) {
         const auto padding = delta / 2;
@@ -43,11 +45,11 @@ class Interval {
 
    private:
     double min_, max_;
-
-    static const Interval EMPTY, WORLD;
 };
 
-const static Interval EMPTY(+config::infinity, -config::infinity);
-const static Interval WORLD(-config::infinity, +config::infinity);
+namespace RTInterval {
+const Interval EMPTY(+config::infinity, -config::infinity);
+const Interval UNIVERSE(-config::infinity, +config::infinity);
+}  // namespace RTInterval
 
 #endif  // RAYTRACINGINONEWEEKEND_INTERVAL_H

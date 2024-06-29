@@ -21,7 +21,16 @@ class BoundingVolumeHierarchyNode : public Hittable {
     BoundingVolumeHierarchyNode(std::vector<std::shared_ptr<Hittable>>& objects,
                                 const size_t start,
                                 const size_t end) {
-        const int axis = config::GetRandomInt(0, 2);
+        this->bbox_ = AxisAlignedBoundingBox::EMPTY;
+
+        // see rationale in section 3.10
+        for (size_t object_idx = start; object_idx < end; ++object_idx) {
+            this->bbox_ = AxisAlignedBoundingBox{this->bbox_, objects[object_idx]->BoundingBox()};
+        }
+
+        // choose the longest axis for the most subdivision as the splitting axis
+        const int axis = this->bbox_.GetLongestAxis();
+
         const auto comparator = (axis == 0)   ? BoundingVolumeHierarchyNode::BoxXCompare
                                 : (axis == 1) ? BoundingVolumeHierarchyNode::BoxYCompare
                                               : BoundingVolumeHierarchyNode::BoxZCompare;

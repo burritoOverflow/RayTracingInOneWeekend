@@ -26,6 +26,8 @@ class AxisAlignedBoundingBox {
         this->z_ = Interval(bbox1.z_, bbox2.z_);
     }
 
+    static const AxisAlignedBoundingBox EMPTY, UNIVERSE;
+
     inline const Interval AxisInterval(const int n) const {
         if (n == 1) {
             return y_;
@@ -38,14 +40,16 @@ class AxisAlignedBoundingBox {
 
     bool Hit(const Ray& ray, Interval& ray_t) const;
 
-   private:
-    Interval x_, y_, z_;
-
-    int GetLongestAxis() const {
-        if (this->x_.) {
-        statements
+    inline int GetLongestAxis() const {
+        if (this->x_.GetSize() > this->y_.GetSize()) {
+            return this->x_.GetSize() > this->z_.GetSize() ? 0 : 2;
+        } else {
+            return this->y_.GetSize() > this->z_.GetSize() ? 1 : 2;
         }
     }
+
+   private:
+    Interval x_, y_, z_;
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_AABB_H

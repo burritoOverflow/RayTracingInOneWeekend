@@ -12,6 +12,9 @@ struct HitRecord {
     Point3 point_;
     Vector3 normal_;
     double t_;
+    // texture coordinates
+    double u_;
+    double v_;
     bool has_front_face_;
     std::shared_ptr<Material> material_;
 
@@ -21,7 +24,7 @@ struct HitRecord {
         this->normal_ = this->has_front_face_ ? outward_normal : -outward_normal;
     }
 
-    void set_material(std::shared_ptr<Material> material) { material_ = std::move(material); }
+    void SetMaterial(std::shared_ptr<Material> material) { material_ = std::move(material); }
 };
 
 class Hittable {

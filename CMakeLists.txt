@@ -19,6 +19,7 @@ set(SOURCES
         src/camera.cc
         src/color.cc
         src/config.cc
+        src/texture.cc
         src/aabb.cc
         src/bvhnode.cc
         src/main.cc)

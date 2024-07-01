@@ -36,7 +36,7 @@ bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // 6.4 front vs back faces
     const Vector3 outward_normal = (hit_record.point_ - center_) / radius_;
     hit_record.SetFaceNormal(ray, outward_normal);
-    hit_record.set_material(material_);
+    hit_record.SetMaterial(material_);
 
     return true;
 }

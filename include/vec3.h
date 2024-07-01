@@ -100,7 +100,7 @@ inline Vector3 Cross(const Vector3& u, const Vector3& v) {
 }
 
 // unit vector - vector whose length is 1
-inline Vector3 UnitVector(const Vector3 v) {
+inline Vector3 UnitVector(const Vector3& v) {
     // normalizing a vector - convert nonzero vector V to
     // a unit vector by dividing by the vector length
     return v / v.Length();

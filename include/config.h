@@ -7,6 +7,14 @@
 
 namespace config {
 
+struct ElapsedTime {
+    long hours_;  // probably excessive, but who knows
+    long minutes_;
+    long seconds_;
+};
+
+static ElapsedTime measured_duration{0, 0, 0};
+
 constexpr std::string_view DIRNAME = "images";
 
 const double infinity = std::numeric_limits<double>::infinity();
@@ -20,6 +28,10 @@ inline double DegreesToRadians(const double degrees) {
 std::string GetCurrentDateStr(const std::string& time_fmt_str);
 
 std::string GetLogPreamble();
+
+std::string GetElapsedTime();
+
+void IncrementElapsedTime();
 
 void CreateImageOutdir();
 

@@ -1,4 +1,5 @@
 #include <memory>
+#include <thread>
 #include "bvhnode.h"
 #include "camera.h"
 #include "color.h"
@@ -74,6 +75,9 @@ static HittableList GenerateRandomWorld() {
 }
 
 int main() {
+    std::thread counter_thread(config::IncrementElapsedTime);
+    counter_thread.detach();
+
     Camera camera;
     camera.SetVerticalFieldOfView(20);
 

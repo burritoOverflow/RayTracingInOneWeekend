@@ -46,9 +46,18 @@ void Camera::Render(const Hittable& world) {
     out_stream << "P3\n" << image_width_ << ' ' << image_height_ << "\n255\n";
     const auto start_time = std::chrono::steady_clock::now();
 
+    std::string log_string{};
+
     for (int j = 0; j < image_height_; ++j) {
-        std::clog << "\r" << config::GetLogPreamble() << "  Scanlines remaining: " << (image_height_ - j)
-                  << ' ' << std::flush;
+        log_string = "\r" + config::GetLogPreamble() + " " + config::GetElapsedTime() +
+                     " Scanlines remaining: " + std::to_string(image_height_ - j) + ' ';
+
+        if (j == image_height_ - 1) {
+            // leave the above logged line on the final output
+            std::clog << log_string << '\n';
+        } else {
+            std::clog << log_string << std::flush;
+        }
 
         for (int i = 0; i < image_width_; ++i) {
             color::Color pixel_color{0, 0, 0};
@@ -62,8 +71,11 @@ void Camera::Render(const Hittable& world) {
     }
 
     // ugh, avoid ugly formatting
-    std::clog << "\rDone.                                           \n";
+    // this horrid thing is only "necessary" if the last remaining line is not flushed
+    const auto placeholder_string = std::string(log_string.size(), ' ');
+    std::clog << "\rDone" + placeholder_string + "\n";
 
+    // guess this is kind of redundant with the time given above?
     const auto end_time = std::chrono::steady_clock::now();
     config::LogDuration(start_time, end_time);
     out_stream.close();

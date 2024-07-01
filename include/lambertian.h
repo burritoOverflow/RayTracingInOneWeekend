@@ -1,11 +1,14 @@
 #ifndef RAYTRACINGINONEWEEKEND_LAMBERTIAN_H
 #define RAYTRACINGINONEWEEKEND_LAMBERTIAN_H
 
+#include <memory>
 #include "material.h"
+#include "texture.h"
 
 class Lambertian final : public Material {
    public:
-    explicit Lambertian(const color::Color& color) : albedo_(color) {}
+    explicit Lambertian(const color::Color& albedo) : tex_(std::make_shared<SolidColor>(albedo)) {}
+    explicit Lambertian(const std::shared_ptr<Texture>& texture) : tex_(texture){};
 
     inline bool Scatter(const Ray& ray,
                         const HitRecord& hit_record,
@@ -19,12 +22,13 @@ class Lambertian final : public Material {
         }
 
         scattered = Ray(hit_record.point_, scatter_direction, ray.time());
-        attenuation = albedo_;
+        attenuation = this->tex_->Value(hit_record.u_, hit_record.v_, hit_record.point_);
+
         return true;
     }
 
    private:
-    color::Color albedo_;
+    std::shared_ptr<Texture> tex_;
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_LAMBERTIAN_H

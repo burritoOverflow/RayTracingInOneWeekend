@@ -1,6 +1,7 @@
 #include <memory>
 #include "bvhnode.h"
 #include "camera.h"
+#include "color.h"
 #include "config.h"
 #include "dielectric.h"
 #include "hittable_list.h"
@@ -8,10 +9,17 @@
 #include "material.h"
 #include "metal.h"
 #include "sphere.h"
+#include "texture.h"
 #include "vec3.h"
 
 static HittableList GenerateRandomWorld() {
     HittableList world;
+
+    const auto checker =
+        std::make_shared<CheckerTexture>(0.32, color::Color(.2, .3, .1), color::Color(.9, .9, .9));
+    const auto lambertian = std::make_shared<Lambertian>(checker);
+    const auto sphere = std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, lambertian);
+    world.AddObject(sphere);
 
     std::shared_ptr<Material> ground_material = std::make_shared<Lambertian>(color::Color(0.5, 0.5, 0.5));
     auto center_point = Point3(0, -1000, 0);

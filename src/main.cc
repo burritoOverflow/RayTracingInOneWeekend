@@ -26,17 +26,16 @@ Camera ConfigureCameraForRender(const RenderOption render_option) {
 
     switch (render_option) {
         case kBouncingSpheres: {
-            camera.SetVerticalFieldOfView(20);
+            camera.SetVerticalFieldOfView(20.0);
 
             const Point3 look_from = Point3(13, 2, 3);
             const Point3 look_at = Point3(0, 0, 0);
-
             camera.SetLookFrom(look_from);
             camera.SetLookAt(look_at);
 
             const Vector3 v_up = Vector3(0, 1, 0);
-
             camera.SetViewUpVector(v_up);
+
             camera.SetMaxRecursionDepth(50);
             camera.SetDefocusAngle(0.6);
             camera.SetFocusDistance(10.0);
@@ -147,8 +146,7 @@ static void ShowHelp() {
 }
 
 static std::optional<std::string> ParseArgs(int argc, char** argv) {
-    // i dont fully understand why this work for short opts? (as opposed to adding "r")
-    const char* const short_opts = "";
+    const char* const short_opts = "r:";
     const option long_opts[] = {{"render", required_argument, nullptr, 'r'}};
     std::optional<std::string> render_option{};
 

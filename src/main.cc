@@ -1,4 +1,10 @@
+#include <getopt.h>
+#include <cstdlib>
+#include <map>
 #include <memory>
+#include <numeric>
+#include <optional>
+#include <string>
 #include "bvhnode.h"
 #include "camera.h"
 #include "color.h"
@@ -137,6 +143,61 @@ static void RenderBouncingSpheresWorld() {
     camera.Render(world);
 }
 
-int main() {
-    RenderCheckeredSpheresWorld();
+static void ShowHelp() {
+    std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres};" << '\n';
+    exit(EXIT_FAILURE);
+}
+
+static std::optional<std::string> ParseArgs(int argc, char** argv) {
+    const char* const short_opts = "r";
+    const option long_opts[] = {{"render", required_argument, nullptr, 'r'}};
+    std::optional<std::string> render_option{};
+
+    while (true) {
+        const auto option = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+        if (option == -1) {
+            break;
+        }
+
+        switch (option) {
+            case 'r': {
+                render_option = std::string(optarg);
+                break;
+            }
+            case 'h':
+            default:
+                ShowHelp();
+                break;
+        }
+    }
+    return render_option;
+}
+
+static void RunRender(const std::optional<std::string>& maybe_render_opt_str) {
+    if (maybe_render_opt_str->empty()) {
+        ShowHelp();
+    }
+
+    std::string render_opt_str = *maybe_render_opt_str;
+    const std::map<std::string, RenderOption> option_map{{"checkered-spheres", kCheckeredSpheres},
+                                                         {"bouncing-spheres", kBouncingSpheres}};
+
+    const auto result = option_map.find(render_opt_str);
+    if (result == option_map.end()) {
+        ShowHelp();
+    }
+
+    switch (result->second) {
+        case kCheckeredSpheres:
+            RenderCheckeredSpheresWorld();
+            break;
+        case kBouncingSpheres:
+            RenderBouncingSpheresWorld();
+            break;
+    }
+}
+
+int main(int argc, char** argv) {
+    RunRender(ParseArgs(argc, argv));
+    return 0;
 }

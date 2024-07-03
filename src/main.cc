@@ -1,4 +1,5 @@
 #include <getopt.h>
+#include <sys/types.h>
 #include <map>
 #include <memory>
 #include <optional>
@@ -16,12 +17,20 @@
 #include "texture.h"
 #include "vec3.h"
 
-enum RenderOption {
+// choice of pre-defined rendered scene
+enum RenderedSceneOption {
     kBouncingSpheres,
     kCheckeredSpheres,
 };
 
-Camera ConfigureCameraForRender(const RenderOption render_option) {
+// contains the args provided via the longopts.
+struct Args {
+    std::optional<std::string> render_option_;  // string corresponding to the rendered scene
+    std::optional<u_int16_t> image_width_;      // desired width of the image
+};
+
+Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
+                                const std::optional<u_int16_t>& image_width) {
     Camera camera;
 
     switch (render_option) {
@@ -56,10 +65,14 @@ Camera ConfigureCameraForRender(const RenderOption render_option) {
         }
     }
 
+    if (image_width.has_value()) {
+        camera.SetImageWidth(image_width.value());
+    }
+
     return camera;
 }
 
-static void RenderCheckeredSpheresWorld() {
+static void RenderCheckeredSpheresWorld(const std::optional<u_int16_t>& image_width) {
     HittableList world{};
     const auto checker =
         std::make_shared<CheckerTexture>(0.32, color::Color(.2, .3, .1), color::Color(.9, .9, .9));
@@ -73,11 +86,11 @@ static void RenderCheckeredSpheresWorld() {
     world.AddObject(sphere);
     world.AddObject(sphere2);
 
-    auto camera = ConfigureCameraForRender(kCheckeredSpheres);
+    auto camera = ConfigureCameraForRender(kCheckeredSpheres, image_width);
     camera.Render(world);
 }
 
-static void RenderBouncingSpheresWorld() {
+static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_width) {
     HittableList world{};
 
     const auto checker =
@@ -136,22 +149,25 @@ static void RenderBouncingSpheresWorld() {
     // addition of BVHNode
     world = HittableList{std::make_shared<BoundingVolumeHierarchyNode>(world)};
 
-    Camera camera = ConfigureCameraForRender(kBouncingSpheres);
+    Camera camera = ConfigureCameraForRender(kBouncingSpheres, image_width);
     camera.Render(world);
 }
 
 static void ShowHelp() {
-    std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres};" << '\n';
+    std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres}" << '\n';
+    std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
     exit(EXIT_FAILURE);
 }
 
-static std::optional<std::string> ParseArgs(int argc, char** argv) {
-    const char* const short_opts = "r:";
-    const option long_opts[] = {{"render", required_argument, nullptr, 'r'}};
+static Args ParseArgs(int argc, char** argv) {
+    const char* const short_opts = "r:i:";
+    const option long_opts[] = {{"render", required_argument, nullptr, 'r'},
+                                {"image-width", required_argument, nullptr, 'i'}};
     std::optional<std::string> render_option{};
+    std::optional<u_int16_t> image_width{};
 
     while (true) {
-        const auto option = getopt_long_only(argc, argv, short_opts, long_opts, nullptr);
+        const auto option = getopt_long(argc, argv, short_opts, long_opts, nullptr);
         if (option == -1) {
             break;
         }
@@ -161,23 +177,33 @@ static std::optional<std::string> ParseArgs(int argc, char** argv) {
                 render_option = std::string(optarg);
                 break;
             }
+            case 'i': {
+                // this makes no sense why this is "required"
+                // I'm clearly not using this API correctly.
+                if (optarg) {
+                    image_width = std::stoi(optarg);
+                }
+                break;
+            }
             case 'h':
             default:
                 ShowHelp();
                 break;
         }
     }
-    return render_option;
+    return {render_option, image_width};
 }
 
-static void RunRender(const std::optional<std::string>& maybe_render_opt_str) {
+static void RunRender(const Args& args) {
+    // requires the "render" arg
+    const std::optional<std::string> maybe_render_opt_str = args.render_option_;
     if (maybe_render_opt_str->empty()) {
         ShowHelp();
     }
 
     std::string render_opt_str = *maybe_render_opt_str;
-    const std::map<std::string, RenderOption> option_map{{"checkered-spheres", kCheckeredSpheres},
-                                                         {"bouncing-spheres", kBouncingSpheres}};
+    const std::map<std::string, RenderedSceneOption> option_map{{"checkered-spheres", kCheckeredSpheres},
+                                                                {"bouncing-spheres", kBouncingSpheres}};
 
     const auto result = option_map.find(render_opt_str);
     if (result == option_map.end()) {
@@ -186,10 +212,10 @@ static void RunRender(const std::optional<std::string>& maybe_render_opt_str) {
 
     switch (result->second) {
         case kCheckeredSpheres:
-            RenderCheckeredSpheresWorld();
+            RenderCheckeredSpheresWorld(args.image_width_);
             break;
         case kBouncingSpheres:
-            RenderBouncingSpheresWorld();
+            RenderBouncingSpheresWorld(args.image_width_);
             break;
     }
 }

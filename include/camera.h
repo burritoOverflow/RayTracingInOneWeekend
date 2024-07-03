@@ -8,7 +8,9 @@ class Camera final {
    public:
     void Render(const Hittable& world);
 
-    void SetMaxRecursionDepth(int max_recursion_depth) { this->max_recursion_depth_ = max_recursion_depth; }
+    void SetMaxRecursionDepth(const int max_recursion_depth) {
+        this->max_recursion_depth_ = max_recursion_depth;
+    }
 
     inline void SetVerticalFieldOfView(const double v_fov) { this->vertical_field_of_view_ = v_fov; }
 
@@ -21,6 +23,14 @@ class Camera final {
     inline void SetDefocusAngle(const double defocus_angle) { this->defocus_angle_ = defocus_angle; }
 
     inline void SetFocusDistance(const double distance) { this->focus_distance_ = distance; }
+
+    inline void SetAspectRatio(const double aspect_ratio) { this->aspect_ratio_ = aspect_ratio; }
+
+    inline void SetImageWidth(const int image_width) { this->image_width_ = image_width; }
+
+    inline void SetSamplesPerPixel(const int samples_per_pixel) {
+        this->samples_per_pixel_ = samples_per_pixel;
+    }
 
    private:
     double aspect_ratio_ = 16.0 / 9.0;  // ratio of image width over height
@@ -41,8 +51,8 @@ class Camera final {
     Vector3 v_up_ = Vector3{0, 1, 0};      // the camera-relative "up" direction (view-up vector)
 
     // see 13.2
-    double defocus_angle_ = 0;   // variation angle of rays through each pixel
-    double focus_distance_ = 0;  // distance from camera "lookfrom" point to plane of perfect focus
+    double defocus_angle_ = 0;    // variation angle of rays through each pixel
+    double focus_distance_ = 10;  // distance from camera "lookfrom" point to plane of perfect focus
 
     // camera frame basis vectors
     Vector3 u_, v_, w_;

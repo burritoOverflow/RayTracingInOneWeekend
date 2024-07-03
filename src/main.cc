@@ -12,8 +12,70 @@
 #include "texture.h"
 #include "vec3.h"
 
-static HittableList GenerateRandomWorld() {
-    HittableList world;
+enum RenderOption {
+    kBouncingSpheres,
+    kCheckeredSpheres,
+};
+
+Camera ConfigureCameraForRender(const RenderOption render_option) {
+    Camera camera;
+
+    switch (render_option) {
+        case kBouncingSpheres: {
+            camera.SetVerticalFieldOfView(20);
+
+            const Point3 look_from = Point3(13, 2, 3);
+            const Point3 look_at = Point3(0, 0, 0);
+
+            camera.SetLookFrom(look_from);
+            camera.SetLookAt(look_at);
+
+            const Vector3 v_up = Vector3(0, 1, 0);
+
+            camera.SetViewUpVector(v_up);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetDefocusAngle(0.6);
+            camera.SetFocusDistance(10.0);
+            break;
+        }
+
+            // section 4.3 example
+        case kCheckeredSpheres: {
+            camera.SetAspectRatio(16.0 / 9.0);
+            camera.SetSamplesPerPixel(100);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetVerticalFieldOfView(20.0);
+            camera.SetLookFrom(Point3(13, 2, 3));
+            camera.SetLookAt(Point3(0, 0, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
+            camera.SetDefocusAngle(0.0);
+            break;
+        }
+    }
+
+    return camera;
+}
+
+static void RenderCheckeredSpheresWorld() {
+    HittableList world{};
+    const auto checker =
+        std::make_shared<CheckerTexture>(0.32, color::Color(.2, .3, .1), color::Color(.9, .9, .9));
+
+    const double radius = 10;
+    const std::shared_ptr<Lambertian> checker_mat_ptr = std::make_shared<Lambertian>(checker);
+
+    auto sphere = std::make_shared<Sphere>(Point3(0, -10, 0), radius, checker_mat_ptr);
+    auto sphere2 = std::make_shared<Sphere>(Point3(0, 10, 0), radius, checker_mat_ptr);
+
+    world.AddObject(sphere);
+    world.AddObject(sphere2);
+
+    auto camera = ConfigureCameraForRender(kCheckeredSpheres);
+    camera.Render(world);
+}
+
+static void RenderBouncingSpheresWorld() {
+    HittableList world{};
 
     const auto checker =
         std::make_shared<CheckerTexture>(0.32, color::Color(.2, .3, .1), color::Color(.9, .9, .9));
@@ -70,27 +132,11 @@ static HittableList GenerateRandomWorld() {
 
     // addition of BVHNode
     world = HittableList{std::make_shared<BoundingVolumeHierarchyNode>(world)};
-    return world;
+
+    Camera camera = ConfigureCameraForRender(kBouncingSpheres);
+    camera.Render(world);
 }
 
 int main() {
-    Camera camera;
-    camera.SetVerticalFieldOfView(20);
-
-    Point3 look_from = Point3(13, 2, 3);
-    Point3 look_at = Point3(0, 0, 0);
-
-    camera.SetLookFrom(look_from);
-    camera.SetLookAt(look_at);
-
-    Vector3 v_up = Vector3(0, 1, 0);
-    camera.SetViewUpVector(v_up);
-
-    camera.SetMaxRecursionDepth(50);
-
-    camera.SetDefocusAngle(0.6);
-    camera.SetFocusDistance(10.0);
-
-    const auto world = GenerateRandomWorld();
-    camera.Render(world);
+    RenderCheckeredSpheresWorld();
 }

@@ -1,8 +1,6 @@
 #include <getopt.h>
-#include <cstdlib>
 #include <map>
 #include <memory>
-#include <numeric>
 #include <optional>
 #include <string>
 #include "bvhnode.h"
@@ -149,12 +147,13 @@ static void ShowHelp() {
 }
 
 static std::optional<std::string> ParseArgs(int argc, char** argv) {
-    const char* const short_opts = "r";
+    // i dont fully understand why this work for short opts? (as opposed to adding "r")
+    const char* const short_opts = "";
     const option long_opts[] = {{"render", required_argument, nullptr, 'r'}};
     std::optional<std::string> render_option{};
 
     while (true) {
-        const auto option = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+        const auto option = getopt_long_only(argc, argv, short_opts, long_opts, nullptr);
         if (option == -1) {
             break;
         }

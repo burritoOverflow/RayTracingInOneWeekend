@@ -6,6 +6,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build_debug/bin/ray_tracing_in_one_weekend",
+      "args": ["-r", "checkered-spheres"],
       "cwd": "${workspaceFolder}",
       "showDisplayString": true,
       "stopAtEntry": false,

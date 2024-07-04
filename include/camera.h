@@ -57,6 +57,7 @@ class Camera final {
     // camera frame basis vectors
     Vector3 u_, v_, w_;
 
+    // discussion of this is in section 13 Defocus Blur
     Vector3 defocus_disk_u_;  // defocus disk horizontal radius
     Vector3 defocus_disk_v_;  // defocus disk vertical radius
 

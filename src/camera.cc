@@ -40,24 +40,24 @@ void Camera::Render(const Hittable& world) {
 
     const std::string date_fmt_str = "%m-%d-%Y_%H-%M-%S";
     const auto image_out_filename = config::GetCurrentDateStr(date_fmt_str) + "image.ppm";
-    auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
+    const auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
 
     std::ofstream out_stream(image_path.string().c_str());
-    out_stream << "P3\n" << image_width_ << ' ' << image_height_ << "\n255\n";
+    out_stream << "P3\n" << this->image_width_ << ' ' << this->image_height_ << "\n255\n";
     const auto start_time = std::chrono::steady_clock::now();
 
-    for (int j = 0; j < image_height_; ++j) {
-        std::clog << "\r" << config::GetLogPreamble() << "  Scanlines remaining: " << (image_height_ - j)
+    for (int j = 0; j < this->image_height_; ++j) {
+        std::clog << "\r" << config::GetLogPreamble() << "  Scanlines remaining: " << (this->image_height_ - j)
                   << ' ' << std::flush;
 
-        for (int i = 0; i < image_width_; ++i) {
+        for (int i = 0; i < this->image_width_; ++i) {
             color::Color pixel_color{0, 0, 0};
 
-            for (int sample = 0; sample < samples_per_pixel_; ++sample) {
+            for (int sample = 0; sample < this->samples_per_pixel_; ++sample) {
                 const Ray ray = GetRay(i, j);
-                pixel_color += RayColor(ray, world, max_recursion_depth_);
+                pixel_color += RayColor(ray, world, this->max_recursion_depth_);
             }
-            color::WriteColor(out_stream, pixel_color, samples_per_pixel_);
+            color::WriteColor(out_stream, pixel_color, this->samples_per_pixel_);
         }
     }
 
@@ -71,12 +71,12 @@ void Camera::Render(const Hittable& world) {
 
 void Camera::Init() {
     this->camera_center_ = this->look_from_;
-    this->image_height_ = static_cast<int>(image_width_ / aspect_ratio_);
+    this->image_height_ = static_cast<int>(this->image_width_ / this->aspect_ratio_);
 
     const auto theta = config::DegreesToRadians(this->vertical_field_of_view_);
     const auto h = tan(theta / 2);
 
-    const auto viewport_height = 2 * h * focus_distance_;
+    const auto viewport_height = 2 * h * this->focus_distance_;
     const auto viewport_width =
         viewport_height * (static_cast<double>(this->image_width_) / this->image_height_);
 
@@ -93,16 +93,16 @@ void Camera::Init() {
     const auto viewport_v = viewport_height * -this->v_;
 
     // delta_u - distance between pixels on the x-axis
-    pixel_delta_u_ = viewport_u / this->image_width_;
+    this->pixel_delta_u_ = viewport_u / this->image_width_;
 
     // delta_v - distance between pixels on the y-axis
-    pixel_delta_v_ = viewport_v / this->image_height_;
+    this->pixel_delta_v_ = viewport_v / this->image_height_;
 
     // location of the upper left pixel - x = 0, y = 0
     const auto viewport_upper_left =
         this->camera_center_ - (this->focus_distance_ * this->w_) - viewport_u / 2 - viewport_v / 2;
 
-    pixel00_loc_ = viewport_upper_left + 0.5 * (pixel_delta_u_ + pixel_delta_v_);
+    this->pixel00_loc_ = viewport_upper_left + 0.5 * (this->pixel_delta_u_ + this->pixel_delta_v_);
 
     // calculate the defocus disk basis vectors
     const auto defocus_radius =
@@ -115,7 +115,7 @@ void Camera::Init() {
 // get randomly sampled camera ray for the pixel at location i,j
 // originates from the defocus disk
 Ray Camera::GetRay(const int i, const int j) const {
-    const auto pixel_center = pixel00_loc_ + (i * pixel_delta_u_) + (j * pixel_delta_v_);
+    const auto pixel_center = this->pixel00_loc_ + (i * this->pixel_delta_u_) + (j * this->pixel_delta_v_);
     const auto pixel_sample = pixel_center + PixelSampleSquare();
 
     const auto ray_origin = (this->defocus_angle_ <= 0) ? this->camera_center_ : DefocusDiskSample();
@@ -136,5 +136,5 @@ Point3 Camera::DefocusDiskSample() const {
 Vector3 Camera::PixelSampleSquare() const {
     const auto px = -0.5 + config::GetRandomDouble();
     const auto py = -0.5 + config::GetRandomDouble();
-    return (px * pixel_delta_u_) + (py * pixel_delta_v_);
+    return (px * this->pixel_delta_u_) + (py * this->pixel_delta_v_);
 }

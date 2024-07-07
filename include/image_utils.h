@@ -49,7 +49,7 @@ class Image {
 
     const std::string image_dir_;  // default directory for image textures
 
-    static inline int Clamp(const int x, const int max, const int min) {
+    static inline int Clamp(const int x, const int min, const int max) {
         if (x < min) {
             return min;
         }
@@ -63,7 +63,7 @@ class Image {
         if (value <= 0.0f) {
             return 0;
         }
-        if (1 <= value) {
+        if (1.0f <= value) {
             return 255;
         }
         return static_cast<unsigned char>(256.0f * value);

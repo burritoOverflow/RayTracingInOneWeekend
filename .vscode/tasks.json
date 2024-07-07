@@ -9,7 +9,7 @@
     },
     {
       "label": "Build Debug (Ninja)",
-      "command": "cmake -S .  -B ./build_debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=ON -G Ninja  && cmake --build build_debug --verbose",
+      "command": "cmake --preset \"Default Debug\" && cmake --build --preset \"Default Debug\"",
       "args": [],
       "type": "shell"
     },
@@ -21,7 +21,7 @@
     },
     {
       "label": "Build Release (Ninja)",
-      "command": "cmake -S .  -B ./build_release -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON -G Ninja && cmake --build build_release --verbose",
+      "command": "cmake --preset \"Default Release\" && cmake --build --preset \"Default Release\"",
       "args": [],
       "type": "shell"
     }

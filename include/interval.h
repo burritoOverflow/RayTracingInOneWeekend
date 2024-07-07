@@ -40,7 +40,7 @@ class Interval {
     // create a new interval padded by delta (see section 3.4) from an existing Interval
     inline static Interval Expand(const Interval& interval, const double delta) {
         const auto padding = delta / 2;
-        return Interval(interval.Min() - padding, interval.Max() + padding);
+        return {interval.Min() - padding, interval.Max() + padding};
     }
 
    private:

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <memory>
 #include "color.h"
+#include "image_utils.h"
 #include "vec3.h"
 
 class Texture {
@@ -11,7 +12,7 @@ class Texture {
     virtual ~Texture() = default;
 
     // return the texture color given the input coordinates
-    virtual color::Color Value(const double u, const double v, const Point3& point) const = 0;
+    virtual color::Color Value(double u, double v, const Point3& point) const = 0;
 };
 
 class SolidColor : public Texture {
@@ -21,9 +22,7 @@ class SolidColor : public Texture {
     SolidColor(const double red, const double green, const double blue)
         : SolidColor(color::Color(red, green, blue)){};
 
-    color::Color Value(const double u, const double v, const Point3& point) const override {
-        return this->albedo_;
-    }
+    color::Color Value(double u, double v, const Point3& point) const override { return this->albedo_; }
 
    private:
     color::Color albedo_;
@@ -41,12 +40,22 @@ class CheckerTexture : public Texture {
           odd_(std::make_shared<SolidColor>(color2)),
           even_(std::make_shared<SolidColor>(color1)) {}
 
-    color::Color Value(const double u, const double v, const Point3& point) const override;
+    color::Color Value(double u, double v, const Point3& point) const override;
 
    private:
     double inv_scale_;
     std::shared_ptr<Texture> odd_;
     std::shared_ptr<Texture> even_;
+};
+
+class ImageTexture : public Texture {
+   public:
+    explicit ImageTexture(const char* filename) : image_(filename){};
+
+    color::Color Value(double u, double v, const Point3& point) const override;
+
+   private:
+    Image image_;
 };
 
 #endif

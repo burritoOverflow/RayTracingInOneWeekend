@@ -6,7 +6,6 @@
 #include <string>
 #include "bvhnode.h"
 #include "camera.h"
-#include "color.h"
 #include "config.h"
 #include "dielectric.h"
 #include "hittable_list.h"
@@ -18,10 +17,7 @@
 #include "vec3.h"
 
 // choice of pre-defined rendered scene
-enum RenderedSceneOption {
-    kBouncingSpheres,
-    kCheckeredSpheres,
-};
+enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture };
 
 // contains the args provided via the longopts.
 struct Args {
@@ -29,10 +25,14 @@ struct Args {
     std::optional<u_int16_t> image_width_;      // desired width of the image
 };
 
+// set Camera state for a given render, via the RenderSceneOption provided
+// set the camera's image_width, if the parameter is present.
 Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
-                                const std::optional<u_int16_t>& image_width) {
-    Camera camera;
+                                const std::optional<u_int16_t>& image_width = std::nullopt) {
+    Camera camera{};
 
+    // TODO - many of these are "default options" or otherwise shared
+    // should be refactored to reflect this clutter here
     switch (render_option) {
         case kBouncingSpheres: {
             camera.SetVerticalFieldOfView(20.0);
@@ -63,12 +63,22 @@ Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
             camera.SetDefocusAngle(0.0);
             break;
         }
+
+        case kEarthTexture:
+            camera.SetAspectRatio(16.0 / 9.0);
+            camera.SetSamplesPerPixel(100);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetVerticalFieldOfView(20.0);
+            camera.SetLookFrom(Point3(0, 0, 12));
+            camera.SetLookAt(Point3(0, 0, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
+            camera.SetDefocusAngle(0.0);
+            break;
     }
 
     if (image_width.has_value()) {
         camera.SetImageWidth(image_width.value());
     }
-
     return camera;
 }
 
@@ -132,7 +142,7 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
                 }
             }
         }  // end inner loop
-    }      // end outer loop
+    }  // end outer loop
 
     const std::shared_ptr<Material> dielectric_material_ptr = std::make_shared<Dielectric>(1.5);
     const auto point1 = Point3(0, 1, 0);
@@ -153,6 +163,17 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
     camera.Render(world);
 }
 
+static void RenderEarthTextureWorld(const std::optional<u_int16_t>& image_width) {
+    const auto earth_image = "earthmap.jpg";
+    const auto earth_texture = std::make_shared<ImageTexture>(earth_image);
+    const auto earth_surface = std::make_shared<Lambertian>(earth_texture);
+    const auto globe = std::make_shared<Sphere>(Point3(0, 0, 0), 2, earth_surface);
+
+    auto world = HittableList(globe);
+    Camera camera = ConfigureCameraForRender(kEarthTexture, image_width);
+    camera.Render(world);
+}
+
 static void ShowHelp() {
     std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres}" << '\n';
     std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
@@ -163,6 +184,7 @@ static Args ParseArgs(int argc, char** argv) {
     const char* const short_opts = "r:i:";
     const option long_opts[] = {{"render", required_argument, nullptr, 'r'},
                                 {"image-width", required_argument, nullptr, 'i'}};
+
     std::optional<std::string> render_option{};
     std::optional<u_int16_t> image_width{};
 
@@ -201,9 +223,10 @@ static void RunRender(const Args& args) {
         ShowHelp();
     }
 
-    std::string render_opt_str = *maybe_render_opt_str;
+    const std::string& render_opt_str = *maybe_render_opt_str;
     const std::map<std::string, RenderedSceneOption> option_map{{"checkered-spheres", kCheckeredSpheres},
-                                                                {"bouncing-spheres", kBouncingSpheres}};
+                                                                {"bouncing-spheres", kBouncingSpheres},
+                                                                {"earth-texture", kEarthTexture}};
 
     const auto result = option_map.find(render_opt_str);
     if (result == option_map.end()) {
@@ -216,6 +239,10 @@ static void RunRender(const Args& args) {
             break;
         case kBouncingSpheres:
             RenderBouncingSpheresWorld(args.image_width_);
+            break;
+            // TODO
+        case kEarthTexture:
+            RenderEarthTextureWorld(args.image_width_);
             break;
     }
 }

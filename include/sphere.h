@@ -34,6 +34,8 @@ class Sphere final : public Hittable {
 
     bool Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const override;
 
+    static void SetSphereUVCoordinates(const Point3& point, double& u, double& v);
+
     AxisAlignedBoundingBox BoundingBox() const override { return this->bbox_; }
 
    private:

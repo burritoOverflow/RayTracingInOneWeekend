@@ -36,7 +36,26 @@ bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
     // 6.4 front vs back faces
     const Vector3 outward_normal = (hit_record.point_ - center_) / radius_;
     hit_record.SetFaceNormal(ray, outward_normal);
+    SetSphereUVCoordinates(outward_normal, hit_record.u_, hit_record.v_);
     hit_record.SetMaterial(material_);
 
     return true;
+}
+
+/*
+    Description lifted directly from:
+    https://raytracing.github.io/books/RayTracingTheNextWeek.html#texturemapping/texturecoordinatesforspheres
+
+    point: a given point on the sphere of radius one, centered at the origin.
+    u: returned value [0,1] of angle around the Y axis from X=-1.
+    v: returned value [0,1] of angle from Y=-1 to Y=+1.
+        <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+        <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+        <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+*/
+void Sphere::SetSphereUVCoordinates(const Point3& point, double& u, double& v) {
+    const auto phi = atan2(-point.z(), point.x()) + config::PI;
+    const auto theta = acos(-point.y());
+    u = phi / (2 * config::PI);
+    v = theta / config::PI;
 }

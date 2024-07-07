@@ -142,7 +142,7 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
                 }
             }
         }  // end inner loop
-    }  // end outer loop
+    }      // end outer loop
 
     const std::shared_ptr<Material> dielectric_material_ptr = std::make_shared<Dielectric>(1.5);
     const auto point1 = Point3(0, 1, 0);
@@ -175,7 +175,9 @@ static void RenderEarthTextureWorld(const std::optional<u_int16_t>& image_width)
 }
 
 static void ShowHelp() {
-    std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres}" << '\n';
+    std::cerr
+        << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, earth-texture}"
+        << '\n';
     std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
     exit(EXIT_FAILURE);
 }
@@ -240,7 +242,6 @@ static void RunRender(const Args& args) {
         case kBouncingSpheres:
             RenderBouncingSpheresWorld(args.image_width_);
             break;
-            // TODO
         case kEarthTexture:
             RenderEarthTextureWorld(args.image_width_);
             break;

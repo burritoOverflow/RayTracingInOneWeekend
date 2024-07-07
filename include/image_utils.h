@@ -29,14 +29,13 @@ class Image {
         }
     }
 
+    // impl for the dtor in source file to work with STB single inclusion.
     ~Image();
 
     int Width() const { return this->fdata_ == nullptr ? 0 : this->image_width_; }
     int Height() const { return this->fdata_ == nullptr ? 0 : this->image_height_; }
 
-    // Loads the linear (gamma=1) image data from the given file name
-    bool LoadImageData(const std::string& filepath);
-
+    // get the 8-bit RGB values for each pixel
     const unsigned char* PixelData(int x, int y) const;
 
    private:
@@ -48,6 +47,9 @@ class Image {
     int bytes_per_scanline_ = 0;
 
     const std::string image_dir_;  // default directory for image textures
+
+    // Loads the linear (gamma=1) image data from the given file name
+    bool LoadImageData(const std::string& filepath);
 
     static inline int Clamp(const int x, const int min, const int max) {
         if (x < min) {
@@ -74,4 +76,4 @@ class Image {
     void ConvertToBytes();
 };
 
-#endif
+#endif  // IMAGE_UTILS_H

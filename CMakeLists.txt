@@ -36,6 +36,7 @@ set(SOURCES
         src/config.cc
         src/texture.cc
         src/aabb.cc
+        src/args.cc
         src/image_utils.cc
         src/bvhnode.cc
         src/main.cc)

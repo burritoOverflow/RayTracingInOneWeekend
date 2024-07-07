@@ -43,6 +43,7 @@ bool Sphere::Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const {
 }
 
 /*
+    Section 4.4
     Description lifted directly from:
     https://raytracing.github.io/books/RayTracingTheNextWeek.html#texturemapping/texturecoordinatesforspheres
 

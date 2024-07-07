@@ -1,9 +1,7 @@
-#include <getopt.h>
-#include <sys/types.h>
 #include <map>
 #include <memory>
-#include <optional>
 #include <string>
+#include "args.h"
 #include "bvhnode.h"
 #include "camera.h"
 #include "config.h"
@@ -18,12 +16,6 @@
 
 // choice of pre-defined rendered scene
 enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture };
-
-// contains the args provided via the longopts.
-struct Args {
-    std::optional<std::string> render_option_;  // string corresponding to the rendered scene
-    std::optional<u_int16_t> image_width_;      // desired width of the image
-};
 
 // set Camera state for a given render, via the RenderSceneOption provided
 // set the camera's image_width, if the parameter is present.
@@ -174,50 +166,6 @@ static void RenderEarthTextureWorld(const std::optional<u_int16_t>& image_width)
     camera.Render(world);
 }
 
-static void ShowHelp() {
-    std::cerr
-        << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, earth-texture}"
-        << '\n';
-    std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
-    exit(EXIT_FAILURE);
-}
-
-static Args ParseArgs(int argc, char** argv) {
-    const char* const short_opts = "r:i:";
-    const option long_opts[] = {{"render", required_argument, nullptr, 'r'},
-                                {"image-width", required_argument, nullptr, 'i'}};
-
-    std::optional<std::string> render_option{};
-    std::optional<u_int16_t> image_width{};
-
-    while (true) {
-        const auto option = getopt_long(argc, argv, short_opts, long_opts, nullptr);
-        if (option == -1) {
-            break;
-        }
-
-        switch (option) {
-            case 'r': {
-                render_option = std::string(optarg);
-                break;
-            }
-            case 'i': {
-                // this makes no sense why this is "required"
-                // I'm clearly not using this API correctly.
-                if (optarg) {
-                    image_width = std::stoi(optarg);
-                }
-                break;
-            }
-            case 'h':
-            default:
-                ShowHelp();
-                break;
-        }
-    }
-    return {render_option, image_width};
-}
-
 static void RunRender(const Args& args) {
     // requires the "render" arg
     const std::optional<std::string> maybe_render_opt_str = args.render_option_;
@@ -230,6 +178,7 @@ static void RunRender(const Args& args) {
                                                                 {"bouncing-spheres", kBouncingSpheres},
                                                                 {"earth-texture", kEarthTexture}};
 
+    // validate provided render arg
     const auto result = option_map.find(render_opt_str);
     if (result == option_map.end()) {
         ShowHelp();

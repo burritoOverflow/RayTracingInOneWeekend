@@ -1,4 +1,5 @@
 #include "texture.h"
+#include "color.h"
 #include "interval.h"
 
 color::Color CheckerTexture::Value(double u, double v, const Point3& point) const {
@@ -27,4 +28,8 @@ color::Color ImageTexture::Value(double u, double v, const Point3& point) const 
     const auto color_scale = 1.0 / 255.0;
 
     return {color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]};
+}
+
+color::Color NoiseTexture::Value(double u, double v, const Point3& point) const {
+    return color::Color{1, 1, 1} * this->noise_.Noise(point);
 }

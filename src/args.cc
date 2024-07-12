@@ -2,24 +2,24 @@
 #include <unordered_map>
 
 // This approach is lovingly borrowed from: https://blog.vito.nyc/posts/min-guide-to-cli/
-Args ParseArgsArgMap(int argc, char** argv) {
-    typedef std::function<void(Args&, const std::string&)> OneArgHandle;
+args::Args ParseArgsArgMap(int argc, char** argv) {
+    typedef std::function<void(args::Args&, const std::string&)> OneArgHandle;
     typedef std::function<void()> NoArgHandle;
 
     const std::unordered_map<std::string, OneArgHandle> SINGLE_ARG_MAP{
-        {"--render", [](Args& args, const std::string& str_arg) { args.render_option_ = str_arg; }},
-        {"-r", [](Args& args, const std::string& str_arg) { args.render_option_ = str_arg; }},
+        {"--render", [](args::Args& args, const std::string& str_arg) { args.render_option_ = str_arg; }},
+        {"-r", [](args::Args& args, const std::string& str_arg) { args.render_option_ = str_arg; }},
         {"--image-width",
-         [](Args& args, const std::string& str_arg) { args.image_width_ = std::stoi(str_arg); }},
-        {"-i", [](Args& args, const std::string& str_arg) { args.image_width_ = std::stoi(str_arg); }}};
+         [](args::Args& args, const std::string& str_arg) { args.image_width_ = std::stoi(str_arg); }},
+        {"-i", [](args::Args& args, const std::string& str_arg) { args.image_width_ = std::stoi(str_arg); }}};
 
     const std::unordered_map<std::string, NoArgHandle> NO_ARG_MAP{
-        {"--help", []() { ShowHelp(); }},
-        {"-h", []() { ShowHelp(); }},
+        {"--help", []() { args::ShowHelp(); }},
+        {"-h", []() { args::ShowHelp(); }},
     };
 
     // retval
-    Args args{};
+    args::Args args{};
     // mangled/missing args
     bool should_show_help{false};
 
@@ -33,7 +33,8 @@ Args ParseArgsArgMap(int argc, char** argv) {
             break;
         }
 
-        if (auto single_arg_iterator{SINGLE_ARG_MAP.find(opt)}; single_arg_iterator != SINGLE_ARG_MAP.end()) {
+        if (const auto single_arg_iterator{SINGLE_ARG_MAP.find(opt)};
+            single_arg_iterator != SINGLE_ARG_MAP.end()) {
             if (++i < argc) {
                 // handle arg
                 single_arg_iterator->second(args, {argv[i]});
@@ -45,13 +46,13 @@ Args ParseArgsArgMap(int argc, char** argv) {
     }
 
     if (should_show_help) {
-        ShowHelp();
+        args::ShowHelp();
     }
     return args;
 }
 
 // TODO: investigate this is strangely broken (segfaults on release builds(?))
-Args ParseArgsGetOptLong(int argc, char** argv) {
+args::Args ParseArgsGetOptLong(int argc, char** argv) {
     const char* const short_opts = "r:i:";
     const option long_opts[] = {{"render", required_argument, nullptr, 'r'},
                                 {"image-width", required_argument, nullptr, 'i'}};
@@ -80,13 +81,13 @@ Args ParseArgsGetOptLong(int argc, char** argv) {
             }
             case 'h':
             default:
-                ShowHelp();
+                args::ShowHelp();
                 break;
         }
     }
     return {render_option, image_width};
 }
 
-Args ParseArgs(int argc, char** argv) {
+args::Args args::ParseArgs(int argc, char** argv) {
     return ParseArgsArgMap(argc, argv);
 }

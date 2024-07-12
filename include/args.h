@@ -4,23 +4,35 @@
 #include <getopt.h>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <string>
 
 // contains the args provided via the longopts.
+namespace args {
 struct Args {
     std::optional<std::string> render_option_;  // string corresponding to the rendered scene
     std::optional<u_int16_t> image_width_;      // desired width of the image
 };
 
 inline static void ShowHelp() {
-    std::cerr
-        << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, earth-texture}"
-        << '\n';
+    std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, "
+                 "earth-texture, perlin-spheres}"
+              << '\n';
     std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
     exit(EXIT_FAILURE);
 }
 
+// choice of pre-defined rendered scene
+enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture, kPerlinSpheres };
+
+const std::map<std::string, RenderedSceneOption> RENDER_ARG_OPTION_MAP{
+    {"checkered-spheres", kCheckeredSpheres},
+    {"bouncing-spheres", kBouncingSpheres},
+    {"earth-texture", kEarthTexture},
+    {"perlin-spheres", kPerlinSpheres}};
+
 Args ParseArgs(int argc, char** argv);
+}  // namespace args
 
 #endif  // ARGS_H

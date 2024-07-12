@@ -1,6 +1,7 @@
 #include <map>
 #include <memory>
 #include <string>
+
 #include "args.h"
 #include "bvhnode.h"
 #include "camera.h"
@@ -14,29 +15,20 @@
 #include "texture.h"
 #include "vec3.h"
 
-// choice of pre-defined rendered scene
-enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture };
-
 // set Camera state for a given render, via the RenderSceneOption provided
 // set the camera's image_width, if the parameter is present.
-Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
+Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
                                 const std::optional<u_int16_t>& image_width = std::nullopt) {
     Camera camera{};
 
     // TODO - many of these are "default options" or otherwise shared
     // should be refactored to reflect this clutter here
     switch (render_option) {
-        case kBouncingSpheres: {
+        case args::kBouncingSpheres: {
             camera.SetVerticalFieldOfView(20.0);
-
-            const Point3 look_from = Point3(13, 2, 3);
-            const Point3 look_at = Point3(0, 0, 0);
-            camera.SetLookFrom(look_from);
-            camera.SetLookAt(look_at);
-
-            const Vector3 v_up = Vector3(0, 1, 0);
-            camera.SetViewUpVector(v_up);
-
+            camera.SetLookFrom(Point3(13, 2, 3));
+            camera.SetLookAt(Point3(0, 0, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
             camera.SetMaxRecursionDepth(50);
             camera.SetDefocusAngle(0.6);
             camera.SetFocusDistance(10.0);
@@ -44,7 +36,7 @@ Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
         }
 
             // section 4.3 example
-        case kCheckeredSpheres: {
+        case args::kCheckeredSpheres: {
             camera.SetAspectRatio(16.0 / 9.0);
             camera.SetSamplesPerPixel(100);
             camera.SetMaxRecursionDepth(50);
@@ -56,7 +48,7 @@ Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
             break;
         }
 
-        case kEarthTexture:
+        case args::kEarthTexture:
             camera.SetAspectRatio(16.0 / 9.0);
             camera.SetSamplesPerPixel(100);
             camera.SetMaxRecursionDepth(50);
@@ -66,6 +58,16 @@ Camera ConfigureCameraForRender(const RenderedSceneOption render_option,
             camera.SetViewUpVector(Vector3(0, 1, 0));
             camera.SetDefocusAngle(0.0);
             break;
+
+        case args::kPerlinSpheres:
+            camera.SetAspectRatio(16.0 / 9.0);
+            camera.SetSamplesPerPixel(100);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetVerticalFieldOfView(20.0);
+            camera.SetLookFrom(Point3(13, 2, 3));
+            camera.SetLookAt(Point3(0, 0, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
+            camera.SetDefocusAngle(0.0);
     }
 
     if (image_width.has_value()) {
@@ -88,7 +90,7 @@ static void RenderCheckeredSpheresWorld(const std::optional<u_int16_t>& image_wi
     world.AddObject(sphere);
     world.AddObject(sphere2);
 
-    auto camera = ConfigureCameraForRender(kCheckeredSpheres, image_width);
+    auto camera = ConfigureCameraForRender(args::kCheckeredSpheres, image_width);
     camera.Render(world);
 }
 
@@ -151,7 +153,7 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
     // addition of BVHNode
     world = HittableList{std::make_shared<BoundingVolumeHierarchyNode>(world)};
 
-    Camera camera = ConfigureCameraForRender(kBouncingSpheres, image_width);
+    Camera camera = ConfigureCameraForRender(args::kBouncingSpheres, image_width);
     camera.Render(world);
 }
 
@@ -162,42 +164,53 @@ static void RenderEarthTextureWorld(const std::optional<u_int16_t>& image_width)
     const auto globe = std::make_shared<Sphere>(Point3(0, 0, 0), 2, earth_surface);
 
     auto world = HittableList(globe);
-    Camera camera = ConfigureCameraForRender(kEarthTexture, image_width);
+    Camera camera = ConfigureCameraForRender(args::kEarthTexture, image_width);
     camera.Render(world);
 }
 
-static void RunRender(const Args& args) {
+static void RenderPerlinSpheres(const std::optional<u_int16_t>& image_width) {
+    auto world = HittableList();
+    auto pertext = std::make_shared<NoiseTexture>();
+    world.AddObject(
+        std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, std::make_shared<Lambertian>(pertext)));
+    world.AddObject(std::make_shared<Sphere>(Point3(0, 2, 0), 2, std::make_shared<Lambertian>(pertext)));
+
+    Camera camera = ConfigureCameraForRender(args::kPerlinSpheres, image_width);
+    camera.Render(world);
+}
+
+static void RunRender(const args::Args& args) {
     // requires the "render" arg
     const std::optional<std::string> maybe_render_opt_str = args.render_option_;
     if (maybe_render_opt_str->empty()) {
-        ShowHelp();
+        args::ShowHelp();
     }
 
     const std::string& render_opt_str = *maybe_render_opt_str;
-    const std::map<std::string, RenderedSceneOption> option_map{{"checkered-spheres", kCheckeredSpheres},
-                                                                {"bouncing-spheres", kBouncingSpheres},
-                                                                {"earth-texture", kEarthTexture}};
 
     // validate provided render arg
-    const auto result = option_map.find(render_opt_str);
-    if (result == option_map.end()) {
-        ShowHelp();
+    const auto result = args::RENDER_ARG_OPTION_MAP.find(render_opt_str);
+    if (result == args::RENDER_ARG_OPTION_MAP.end()) {
+        args::ShowHelp();
     }
 
     switch (result->second) {
-        case kCheckeredSpheres:
+        case args::kCheckeredSpheres:
             RenderCheckeredSpheresWorld(args.image_width_);
             break;
-        case kBouncingSpheres:
+        case args::kBouncingSpheres:
             RenderBouncingSpheresWorld(args.image_width_);
             break;
-        case kEarthTexture:
+        case args::kEarthTexture:
             RenderEarthTextureWorld(args.image_width_);
+            break;
+        case args::kPerlinSpheres:
+            RenderPerlinSpheres(args.image_width_);
             break;
     }
 }
 
 int main(int argc, char** argv) {
-    RunRender(ParseArgs(argc, argv));
+    RunRender(args::ParseArgs(argc, argv));
     return 0;
 }

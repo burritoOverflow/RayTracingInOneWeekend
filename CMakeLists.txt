@@ -35,6 +35,7 @@ set(SOURCES
         src/color.cc
         src/config.cc
         src/texture.cc
+        src/perlin.cc
         src/aabb.cc
         src/args.cc
         src/image_utils.cc

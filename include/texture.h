@@ -5,6 +5,7 @@
 #include <memory>
 #include "color.h"
 #include "image_utils.h"
+#include "perlin.h"
 #include "vec3.h"
 
 class Texture {
@@ -56,6 +57,16 @@ class ImageTexture : public Texture {
 
    private:
     Image image_;
+};
+
+class NoiseTexture : public Texture {
+   public:
+    NoiseTexture(){};
+
+    color::Color Value(double u, double v, const Point3& point) const override;
+
+   private:
+    Perlin noise_;
 };
 
 #endif

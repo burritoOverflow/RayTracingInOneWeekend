@@ -12,7 +12,7 @@ And build:
 cmake --build --preset "Default Debug"
 ```
 
-Launch with a specified render option, either: `checkered-spheres` `bouncing-spheres`, or `earth-texture`
+Launch with a specified render option, either: `checkered-spheres` `bouncing-spheres`,`earth-texture`, or `perlin-spheres`.
 
 `--image-width` is an optional argument.
 

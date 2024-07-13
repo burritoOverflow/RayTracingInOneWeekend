@@ -31,5 +31,5 @@ color::Color ImageTexture::Value(double u, double v, const Point3& point) const 
 }
 
 color::Color NoiseTexture::Value(double u, double v, const Point3& point) const {
-    return color::Color{1, 1, 1} * this->noise_.Noise(point);
+    return color::Color{1, 1, 1} * this->noise_.Noise(scale_ * point);
 }

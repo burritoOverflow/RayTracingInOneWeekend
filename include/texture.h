@@ -61,12 +61,13 @@ class ImageTexture : public Texture {
 
 class NoiseTexture : public Texture {
    public:
-    NoiseTexture(){};
+    NoiseTexture(const double scale) : scale_(scale){};
 
     color::Color Value(double u, double v, const Point3& point) const override;
 
    private:
     Perlin noise_;
+    const double scale_;
 };
 
 #endif

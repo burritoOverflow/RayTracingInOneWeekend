@@ -170,7 +170,8 @@ static void RenderEarthTextureWorld(const std::optional<u_int16_t>& image_width)
 
 static void RenderPerlinSpheres(const std::optional<u_int16_t>& image_width) {
     auto world = HittableList();
-    auto pertext = std::make_shared<NoiseTexture>();
+    const double scale{4};
+    auto pertext = std::make_shared<NoiseTexture>(scale);
     world.AddObject(
         std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, std::make_shared<Lambertian>(pertext)));
     world.AddObject(std::make_shared<Sphere>(Point3(0, 2, 0), 2, std::make_shared<Lambertian>(pertext)));

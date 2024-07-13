@@ -4,9 +4,14 @@
 #include "config.h"
 
 double Perlin::Noise(const Point3& point) const {
-    const auto u = point.x() - floor(point.x());
-    const auto v = point.y() - floor(point.y());
-    const auto w = point.z() - floor(point.z());
+    auto u = point.x() - floor(point.x());
+    auto v = point.y() - floor(point.y());
+    auto w = point.z() - floor(point.z());
+
+    // Hermitian smoothing - section 5.3
+    u = u * u * (3 - 2 * u);
+    v = v * v * (3 - 2 * v);
+    w = w * w * (3 - 2 * w);
 
     const auto i = int(floor(point.x()));
     const auto j = int(floor(point.y()));

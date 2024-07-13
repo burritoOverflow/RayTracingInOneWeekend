@@ -23,7 +23,7 @@ args::Args ParseArgsArgMap(int argc, char** argv) {
     // mangled/missing args
     bool should_show_help{false};
 
-    // avoid executable name argv[0]
+    // avoid executable name (argv[0])
     for (int i = 1; i < argc; i++) {
         const std::string opt{argv[i]};
 

@@ -28,6 +28,8 @@ class Perlin {
     static std::unique_ptr<int[]> PerlinGeneratePerm();
 
     static void Permute(std::unique_ptr<int[]>& p, const int n);
+
+    static double TrilinearInterpolation(double c[2][2][2], double u, double v, double w);
 };
 
 #endif  // PERLIN_H

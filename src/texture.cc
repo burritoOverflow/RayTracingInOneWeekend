@@ -31,5 +31,7 @@ color::Color ImageTexture::Value(double u, double v, const Point3& point) const 
 }
 
 color::Color NoiseTexture::Value(double u, double v, const Point3& point) const {
-    return color::Color{1, 1, 1} * this->noise_.Turbulence(point, 7);
+    // see comments in section 5.7
+    return color::Color{0.5, 0.5, 0.5} *
+           (1 + sin(scale_ * point.z() + 10 * this->noise_.Turbulence(point, 7)));
 }

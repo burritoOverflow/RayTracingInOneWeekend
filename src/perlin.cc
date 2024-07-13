@@ -24,7 +24,21 @@ double Perlin::Noise(const Point3& point) const {
     return PerlinInterpolation(c, u, v, w);
 }
 
-double Perlin::TrilinearInterpolation(double c[2][2][2], double u, double v, double w) {
+double Perlin::Turbulence(const Point3& point, const double depth) const {
+    double accum{0.0};
+    Point3 temp_point = point;
+    double weight{1.0};
+
+    for (int i = 0; i < depth; ++i) {
+        accum += weight * Noise(temp_point);
+        weight *= 0.5;
+        temp_point *= 2;
+    }
+
+    return fabs(accum);
+}
+
+double Perlin::TrilinearInterpolation(const double c[2][2][2], double u, double v, double w) {
     double accumulator = 0.0;
 
     for (int i = 0; i < 2; i++)

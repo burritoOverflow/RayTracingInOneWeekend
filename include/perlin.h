@@ -24,6 +24,8 @@ class Perlin {
 
     double Noise(const Point3& point) const;
 
+    double Turbulence(const Point3& point, const double depth) const;
+
    private:
     static constexpr int POINT_COUNT_ = 256;
 
@@ -37,7 +39,10 @@ class Perlin {
 
     static void Permute(std::unique_ptr<int[]>& p, const int n);
 
-    static double TrilinearInterpolation(double c[2][2][2], const double u, const double v, const double w);
+    static double TrilinearInterpolation(const double c[2][2][2],
+                                         const double u,
+                                         const double v,
+                                         const double w);
 
     static double PerlinInterpolation(const Vector3 c[2][2][2],
                                       const double u,

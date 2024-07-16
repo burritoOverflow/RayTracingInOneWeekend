@@ -10,7 +10,9 @@ class AxisAlignedBoundingBox {
    public:
     AxisAlignedBoundingBox(){};  // default AABB is empy since intervals are empty by default
 
-    AxisAlignedBoundingBox(const Interval& x, const Interval& y, const Interval& z) : x_(x), y_(y), z_(z) {}
+    AxisAlignedBoundingBox(const Interval& x, const Interval& y, const Interval& z) : x_(x), y_(y), z_(z) {
+        this->PadToMinimum();
+    }
 
     AxisAlignedBoundingBox(const Point3& a, const Point3& b) {
         // Treat the two points a and b as extrema for the bounding box, so we don't require a
@@ -18,6 +20,8 @@ class AxisAlignedBoundingBox {
         x_ = (a[0] <= b[0]) ? Interval(a[0], b[0]) : Interval(b[0], a[0]);
         y_ = (a[1] <= b[1]) ? Interval(a[1], b[1]) : Interval(b[1], a[1]);
         z_ = (a[2] <= b[2]) ? Interval(a[2], b[2]) : Interval(b[2], a[2]);
+
+        this->PadToMinimum();
     }
 
     AxisAlignedBoundingBox(const AxisAlignedBoundingBox& bbox1, const AxisAlignedBoundingBox& bbox2) {
@@ -50,6 +54,20 @@ class AxisAlignedBoundingBox {
 
    private:
     Interval x_, y_, z_;
+
+    // adjust the AABB so that no side is narrower than some delta, add padding if necessary.
+    void PadToMinimum() {
+        const double DELTA{0.0001};
+        if (x_.GetSize() < DELTA) {
+            x_ = x_.Expand(DELTA);
+        }
+        if (y_.GetSize() < DELTA) {
+            y_ = y_.Expand(DELTA);
+        }
+        if (z_.GetSize() < DELTA) {
+            z_ = z_.Expand(DELTA);
+        }
+    }
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_AABB_H

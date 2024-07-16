@@ -11,6 +11,7 @@
 #include "lambertian.h"
 #include "material.h"
 #include "metal.h"
+#include "quad.h"
 #include "sphere.h"
 #include "texture.h"
 #include "vec3.h"
@@ -68,6 +69,17 @@ Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
             camera.SetLookAt(Point3(0, 0, 0));
             camera.SetViewUpVector(Vector3(0, 1, 0));
             camera.SetDefocusAngle(0.0);
+            break;
+
+        case args::kQuads:
+            camera.SetAspectRatio(1.0);
+            camera.SetSamplesPerPixel(100);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetVerticalFieldOfView(80);
+            camera.SetLookFrom(Point3(0, 0, 9));
+            camera.SetLookAt(Point3(0, 0, 0));
+            camera.SetDefocusAngle(0.0);
+            break;
     }
 
     if (image_width.has_value()) {
@@ -180,6 +192,27 @@ static void RenderPerlinSpheres(const std::optional<u_int16_t>& image_width) {
     camera.Render(world);
 }
 
+static void RenderQuads(const std::optional<u_int16_t>& image_width) {
+    auto left_red = std::make_shared<Lambertian>(color::Color(1.0, 0.2, 0.2));
+    auto back_green = std::make_shared<Lambertian>(color::Color(0.2, 1.0, 0.2));
+    auto right_blue = std::make_shared<Lambertian>(color::Color(0.2, 0.2, 1.0));
+    auto upper_orange = std::make_shared<Lambertian>(color::Color(1.0, 0.5, 0.0));
+    auto lower_teal = std::make_shared<Lambertian>(color::Color(0.2, 0.8, 0.8));
+
+    auto world = HittableList();
+
+    world.AddObject(std::make_shared<Quad>(Point3(-3, -2, 5), Vector3(0, 0, -4), Vector3(0, 4, 0), left_red));
+    world.AddObject(std::make_shared<Quad>(Point3(-2, -2, 0), Vector3(4, 0, 0), Vector3(0, 4, 0), back_green));
+    world.AddObject(std::make_shared<Quad>(Point3(3, -2, 1), Vector3(0, 0, 4), Vector3(0, 4, 0), right_blue));
+    world.AddObject(
+        std::make_shared<Quad>(Point3(-2, 3, 1), Vector3(4, 0, 0), Vector3(0, 0, 4), upper_orange));
+    world.AddObject(
+        std::make_shared<Quad>(Point3(-2, -3, 5), Vector3(4, 0, 0), Vector3(0, 0, -4), lower_teal));
+
+    Camera camera = ConfigureCameraForRender(args::kQuads, image_width);
+    camera.Render(world);
+}
+
 static void RunRender(const args::Args& args) {
     // requires the "render" arg
     const std::optional<std::string> maybe_render_opt_str = args.render_option_;
@@ -207,6 +240,9 @@ static void RunRender(const args::Args& args) {
             break;
         case args::kPerlinSpheres:
             RenderPerlinSpheres(args.image_width_);
+            break;
+        case args::kQuads:
+            RenderQuads(args.image_width_);
             break;
     }
 }

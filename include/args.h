@@ -17,20 +17,21 @@ struct Args {
 
 inline static void ShowHelp() {
     std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, "
-                 "earth-texture, perlin-spheres}"
+                 "earth-texture, perlin-spheres, quads}"
               << '\n';
     std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
     exit(EXIT_FAILURE);
 }
 
 // choice of pre-defined rendered scene
-enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture, kPerlinSpheres };
+enum RenderedSceneOption { kBouncingSpheres, kCheckeredSpheres, kEarthTexture, kPerlinSpheres, kQuads };
 
 const std::map<std::string, RenderedSceneOption> RENDER_ARG_OPTION_MAP{
     {"checkered-spheres", kCheckeredSpheres},
     {"bouncing-spheres", kBouncingSpheres},
     {"earth-texture", kEarthTexture},
-    {"perlin-spheres", kPerlinSpheres}};
+    {"perlin-spheres", kPerlinSpheres},
+    {"quads", kQuads}};
 
 Args ParseArgs(int argc, char** argv);
 }  // namespace args

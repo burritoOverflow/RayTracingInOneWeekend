@@ -38,6 +38,7 @@ set(SOURCES
         src/perlin.cc
         src/aabb.cc
         src/args.cc
+        src/quad.cc
         src/image_utils.cc
         src/bvhnode.cc
         src/main.cc)

@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "config.h"
 #include "dielectric.h"
+#include "diffuse_light.h"
 #include "hittable_list.h"
 #include "lambertian.h"
 #include "material.h"
@@ -20,7 +21,9 @@
 // set the camera's image_width, if the parameter is present.
 Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
                                 const std::optional<u_int16_t>& image_width = std::nullopt) {
+    const color::Color DEFAULT_RENDER_BACKGROUND_COLOR{0.7, 0.8, 1.0};
     Camera camera{};
+    camera.SetBackgroundColor(DEFAULT_RENDER_BACKGROUND_COLOR);
 
     // TODO - many of these are "default options" or otherwise shared
     // should be refactored to reflect this clutter here
@@ -79,6 +82,18 @@ Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
             camera.SetLookFrom(Point3(0, 0, 9));
             camera.SetLookAt(Point3(0, 0, 0));
             camera.SetDefocusAngle(0.0);
+            break;
+
+        case args::kSimpleLight:
+            camera.SetAspectRatio(16.0 / 9.0);
+            camera.SetSamplesPerPixel(100);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetVerticalFieldOfView(20.0);
+            camera.SetDefocusAngle(0.0);
+            camera.SetLookFrom(Point3(26, 3, 6));
+            camera.SetLookAt(Point3(0, 2, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
+            camera.SetBackgroundColor(color::Color(0, 0, 0));
             break;
     }
 
@@ -148,7 +163,7 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
                 }
             }
         }  // end inner loop
-    }      // end outer loop
+    }  // end outer loop
 
     const std::shared_ptr<Material> dielectric_material_ptr = std::make_shared<Dielectric>(1.5);
     const auto point1 = Point3(0, 1, 0);
@@ -213,6 +228,25 @@ static void RenderQuads(const std::optional<u_int16_t>& image_width) {
     camera.Render(world);
 }
 
+static void RenderSimpleLight(const std::optional<u_int16_t>& image_width) {
+    auto world = HittableList();
+
+    auto pertext = std::make_shared<NoiseTexture>(4);
+
+    world.AddObject(
+        std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, std::make_shared<Lambertian>(pertext)));
+    world.AddObject(std::make_shared<Sphere>(Point3(0, 2, 0), 2, std::make_shared<Lambertian>(pertext)));
+
+    const auto difflight_color = color::Color(4, 4, 4);
+    const auto difflight = std::make_shared<DiffuseLight>(difflight_color);
+
+    world.AddObject(std::make_shared<Sphere>(Point3(0, 7, 0), 2, difflight));
+    world.AddObject(std::make_shared<Quad>(Point3(3, 1, -2), Vector3(2, 0, 0), Vector3(0, 2, 0), difflight));
+
+    Camera camera = ConfigureCameraForRender(args::kSimpleLight, image_width);
+    camera.Render(world);
+}
+
 static void RunRender(const args::Args& args) {
     // requires the "render" arg
     const std::optional<std::string> maybe_render_opt_str = args.render_option_;
@@ -243,6 +277,9 @@ static void RunRender(const args::Args& args) {
             break;
         case args::kQuads:
             RenderQuads(args.image_width_);
+            break;
+        case args::kSimpleLight:
+            RenderSimpleLight(args.image_width_);
             break;
     }
 }

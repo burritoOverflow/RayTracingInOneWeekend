@@ -32,6 +32,10 @@ class Camera final {
         this->samples_per_pixel_ = samples_per_pixel;
     }
 
+    inline const color::Color& GetBackgroundColor() const { return this->background_; }
+
+    inline void SetBackgroundColor(const color::Color& background) { this->background_ = background; }
+
    private:
     double aspect_ratio_ = 16.0 / 9.0;  // ratio of image width over height
     int image_width_ = 1200;            // rendered image width in pixel count
@@ -57,13 +61,16 @@ class Camera final {
     // camera frame basis vectors
     Vector3 u_, v_, w_;
 
+   private:
     // discussion of this is in section 13 Defocus Blur
     Vector3 defocus_disk_u_;  // defocus disk horizontal radius
     Vector3 defocus_disk_v_;  // defocus disk vertical radius
 
+    color::Color background_;  // background color for the scene
+
     void Init();
 
-    static color::Color RayColor(const Ray& ray, const Hittable& world, int depth);
+    color::Color RayColor(const Ray& ray, const Hittable& world, int depth);
 
     Ray GetRay(int i, int j) const;
 

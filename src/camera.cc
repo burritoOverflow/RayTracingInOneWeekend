@@ -5,33 +5,31 @@
 #include "material.h"
 
 color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) {
-    HitRecord hit_record;
-
     // if the ray bounce limit is exceeded, no more light is gathered
     if (depth <= 0) {
         return {0, 0, 0};
     }
 
+    HitRecord hit_record;
+
     // see section 9.3 for this interval value
-    if (world.Hit(ray, Interval(0.001, config::infinity), hit_record)) {
-        Ray scattered{};
-        color::Color attenuation{};
-
-        if (hit_record.material_->Scatter(ray, hit_record, attenuation, scattered)) {
-            return attenuation * RayColor(scattered, world, depth - 1);
-        }
-
-        return color::Color{0, 0, 0};
+    // return background color if the Ray hits nothing
+    if (!world.Hit(ray, Interval(0.001, config::infinity), hit_record)) {
+        return this->background_;
     }
 
-    // linearly blend white and blue, depending on height of the y-coord
-    const Vector3 unit_direction = UnitVector(ray.direction());
+    Ray scattered{};
+    color::Color attenuation{};
+    color::Color color_from_emission =
+        hit_record.material_->Emitted(hit_record.u_, hit_record.v_, hit_record.point_);
 
-    // a from 0 to 1
-    const auto a = 0.5 * (unit_direction.y() + 1.0);
+    if (!hit_record.material_->Scatter(ray, hit_record, attenuation, scattered)) {
+        return color_from_emission;
+    }
 
-    // lerp of the form: blendedValue = (1 - a) * startValue + a * endValue
-    return (1.0 - a) * color::Color(1.0, 1.0, 1.0) + a * color::Color(0.5, 0.7, 1.0);
+    const color::Color color_from_scatter = attenuation * this->RayColor(scattered, world, depth - 1);
+
+    return color_from_emission + color_from_scatter;
 }
 
 void Camera::Render(const Hittable& world) {

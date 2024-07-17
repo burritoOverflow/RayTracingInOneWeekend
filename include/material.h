@@ -16,7 +16,13 @@ class Material {
     virtual bool Scatter(const Ray& ray,
                          const HitRecord& hit_record,
                          color::Color& attenuation,
-                         Ray& scattered) const = 0;
+                         Ray& scattered) const {
+        return false;
+    }
+
+    virtual color::Color Emitted(const double u, const double v, const Point3& point) const {
+        return color::Color{0, 0, 0};
+    }
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_MATERIAL_H

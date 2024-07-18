@@ -4,6 +4,7 @@
 #include <memory>
 #include "aabb.h"
 #include "hittable.h"
+#include "hittable_list.h"
 #include "material.h"
 #include "vec3.h"
 
@@ -42,5 +43,7 @@ class Quad : public Hittable {
     std::shared_ptr<Material> material_;
     AxisAlignedBoundingBox bbox_;
 };
+
+std::shared_ptr<HittableList> Box(const Point3& a, const Point3& b, std::shared_ptr<Material>& material);
 
 #endif  // QUAD_H

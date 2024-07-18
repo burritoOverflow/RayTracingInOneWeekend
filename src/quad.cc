@@ -1,5 +1,8 @@
 #include "quad.h"
+#include <math.h>
 #include <cmath>
+#include <memory>
+#include "hittable_list.h"
 #include "interval.h"
 #include "vec3.h"
 
@@ -50,4 +53,26 @@ bool Quad::IsInterior(const double a, const double b, HitRecord& hit_record) con
     hit_record.u_ = a;
     hit_record.v_ = b;
     return true;
+}
+
+// returns the 3D (6 sided) box that contains the two opposite vertices a and b.
+std::shared_ptr<HittableList> Box(const Point3& a, const Point3& b, std::shared_ptr<Material>& material) {
+    auto sides = std::make_shared<HittableList>();
+
+    // construct two opposite vertices with min and max coordinates
+    const auto min = Point3{fmin(a.x(), b.x()), fmin(a.y(), b.y()), fmin(a.z(), b.z())};
+    const auto max = Point3{fmax(a.x(), b.x()), fmax(a.y(), b.y()), fmax(a.z(), b.z())};
+
+    const auto dx = Vector3{max.x() - min.x(), 0, 0};
+    const auto dy = Vector3{0, max.y() - min.y(), 0};
+    const auto dz = Vector3{0, 0, max.z() - min.z()};
+
+    sides->AddObject(std::make_shared<Quad>(Point3(min.x(), min.y(), max.z()), dx, dy, material));   // front
+    sides->AddObject(std::make_shared<Quad>(Point3(max.x(), min.y(), max.z()), -dz, dy, material));  // right
+    sides->AddObject(std::make_shared<Quad>(Point3(max.x(), min.y(), min.z()), -dx, dy, material));  // back
+    sides->AddObject(std::make_shared<Quad>(Point3(min.x(), min.y(), min.z()), dz, dy, material));   // left
+    sides->AddObject(std::make_shared<Quad>(Point3(min.x(), max.y(), max.z()), dx, -dz, material));  // top
+    sides->AddObject(std::make_shared<Quad>(Point3(min.x(), min.y(), min.z()), dx, dz, material));   // bottom
+
+    return sides;
 }

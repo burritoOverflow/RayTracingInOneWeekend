@@ -95,6 +95,18 @@ Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
             camera.SetViewUpVector(Vector3(0, 1, 0));
             camera.SetBackgroundColor(color::Color(0, 0, 0));
             break;
+
+        case args::kCornellBox:
+            camera.SetAspectRatio(1.0);
+            camera.SetVerticalFieldOfView(40);
+            camera.SetSamplesPerPixel(200);
+            camera.SetMaxRecursionDepth(50);
+            camera.SetBackgroundColor(color::Color(0, 0, 0));
+            camera.SetLookFrom(Point3(278, 278, -800));
+            camera.SetLookAt(Point3(278, 278, 0));
+            camera.SetViewUpVector(Vector3(0, 1, 0));
+            camera.SetDefocusAngle(0.0);
+            break;
     }
 
     if (image_width.has_value()) {
@@ -163,7 +175,7 @@ static void RenderBouncingSpheresWorld(const std::optional<u_int16_t>& image_wid
                 }
             }
         }  // end inner loop
-    }  // end outer loop
+    }      // end outer loop
 
     const std::shared_ptr<Material> dielectric_material_ptr = std::make_shared<Dielectric>(1.5);
     const auto point1 = Point3(0, 1, 0);
@@ -247,6 +259,28 @@ static void RenderSimpleLight(const std::optional<u_int16_t>& image_width) {
     camera.Render(world);
 }
 
+// section 7.4 (empty Cornell Box)
+static void RenderCornellBox(const std::optional<u_int16_t>& image_width) {
+    auto world = HittableList();
+
+    const auto red = std::make_shared<Lambertian>(color::Color(.65, .05, .05));
+    const auto white = std::make_shared<Lambertian>(color::Color(.73, .73, .73));
+    const auto green = std::make_shared<Lambertian>(color::Color(.12, .45, .15));
+    const auto light = std::make_shared<DiffuseLight>(color::Color(15, 15, 15));
+
+    world.AddObject(std::make_shared<Quad>(Point3(555, 0, 0), Vector3(0, 555, 0), Vector3(0, 0, 555), green));
+    world.AddObject(std::make_shared<Quad>(Point3(0, 0, 0), Vector3(0, 555, 0), Vector3(0, 0, 555), red));
+    world.AddObject(
+        std::make_shared<Quad>(Point3(343, 554, 332), Vector3(-130, 0, 0), Vector3(0, 0, -105), light));
+    world.AddObject(std::make_shared<Quad>(Point3(0, 0, 0), Vector3(555, 0, 0), Vector3(0, 0, 555), white));
+    world.AddObject(
+        std::make_shared<Quad>(Point3(555, 555, 555), Vector3(-555, 0, 0), Vector3(0, 0, -555), white));
+    world.AddObject(std::make_shared<Quad>(Point3(0, 0, 555), Vector3(555, 0, 0), Vector3(0, 555, 0), white));
+
+    Camera camera = ConfigureCameraForRender(args::kCornellBox, image_width);
+    camera.Render(world);
+}
+
 static void RunRender(const args::Args& args) {
     // requires the "render" arg
     const std::optional<std::string> maybe_render_opt_str = args.render_option_;
@@ -280,6 +314,9 @@ static void RunRender(const args::Args& args) {
             break;
         case args::kSimpleLight:
             RenderSimpleLight(args.image_width_);
+            break;
+        case args::kCornellBox:
+            RenderCornellBox(args.image_width_);
             break;
     }
 }

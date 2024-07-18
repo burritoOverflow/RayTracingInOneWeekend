@@ -1,6 +1,7 @@
 #include "camera.h"
 #include <chrono>
 #include <filesystem>
+#include <iostream>
 #include "config.h"
 #include "material.h"
 
@@ -10,7 +11,7 @@ color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) 
         return {0, 0, 0};
     }
 
-    HitRecord hit_record;
+    HitRecord hit_record{};
 
     // see section 9.3 for this interval value
     // return background color if the Ray hits nothing
@@ -39,6 +40,8 @@ void Camera::Render(const Hittable& world) {
     const std::string date_fmt_str = "%m-%d-%Y_%H-%M-%S";
     const auto image_out_filename = config::GetCurrentDateStr(date_fmt_str) + "image.ppm";
     const auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
+
+    std::clog << "\rWriting image to path '" << image_path.string() << "'\n";
 
     std::ofstream out_stream(image_path.string().c_str());
     out_stream << "P3\n" << this->image_width_ << ' ' << this->image_height_ << "\n255\n";

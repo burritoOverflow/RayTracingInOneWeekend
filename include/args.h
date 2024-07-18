@@ -17,7 +17,7 @@ struct Args {
 
 inline static void ShowHelp() {
     std::cerr << "--render <arg>        The target to render {checkered-spheres, bouncing-spheres, "
-                 "earth-texture, perlin-spheres, quads, simple-light}"
+                 "earth-texture, perlin-spheres, quads, simple-light, cornell-box}"
               << '\n';
     std::cerr << "--image-width <arg>        The width of the rendered scene" << '\n';
     exit(EXIT_FAILURE);
@@ -30,7 +30,8 @@ enum RenderedSceneOption {
     kEarthTexture,
     kPerlinSpheres,
     kQuads,
-    kSimpleLight
+    kSimpleLight,
+    kCornellBox
 };
 
 const std::map<std::string, RenderedSceneOption> RENDER_ARG_OPTION_MAP{
@@ -39,7 +40,8 @@ const std::map<std::string, RenderedSceneOption> RENDER_ARG_OPTION_MAP{
     {"earth-texture", kEarthTexture},
     {"perlin-spheres", kPerlinSpheres},
     {"quads", kQuads},
-    {"simple-light", kSimpleLight}};
+    {"simple-light", kSimpleLight},
+    {"cornell-box", kCornellBox}};
 
 Args ParseArgs(int argc, char** argv);
 }  // namespace args

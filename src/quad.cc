@@ -56,7 +56,9 @@ bool Quad::IsInterior(const double a, const double b, HitRecord& hit_record) con
 }
 
 // returns the 3D (6 sided) box that contains the two opposite vertices a and b.
-std::shared_ptr<HittableList> Box(const Point3& a, const Point3& b, std::shared_ptr<Material>& material) {
+std::shared_ptr<HittableList> Box(const Point3& a,
+                                  const Point3& b,
+                                  const std::shared_ptr<Material>& material) {
     auto sides = std::make_shared<HittableList>();
 
     // construct two opposite vertices with min and max coordinates

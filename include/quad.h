@@ -44,6 +44,6 @@ class Quad : public Hittable {
     AxisAlignedBoundingBox bbox_;
 };
 
-std::shared_ptr<HittableList> Box(const Point3& a, const Point3& b, std::shared_ptr<Material>& material);
+std::shared_ptr<HittableList> Box(const Point3& a, const Point3& b, const std::shared_ptr<Material>& material);
 
 #endif  // QUAD_H

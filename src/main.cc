@@ -259,7 +259,7 @@ static void RenderSimpleLight(const std::optional<u_int16_t>& image_width) {
     camera.Render(world);
 }
 
-// section 7.4 (empty Cornell Box)
+// section 7.4 && section 8
 static void RenderCornellBox(const std::optional<u_int16_t>& image_width) {
     auto world = HittableList();
 
@@ -276,6 +276,9 @@ static void RenderCornellBox(const std::optional<u_int16_t>& image_width) {
     world.AddObject(
         std::make_shared<Quad>(Point3(555, 555, 555), Vector3(-555, 0, 0), Vector3(0, 0, -555), white));
     world.AddObject(std::make_shared<Quad>(Point3(0, 0, 555), Vector3(555, 0, 0), Vector3(0, 555, 0), white));
+
+    world.AddObject(Box(Point3(130, 0, 65), Point3(295, 165, 230), white));
+    world.AddObject(Box(Point3(265, 0, 295), Point3(430, 330, 460), white));
 
     Camera camera = ConfigureCameraForRender(args::kCornellBox, image_width);
     camera.Render(world);

@@ -47,6 +47,15 @@ class Interval {
     double min_, max_;
 };
 
+inline Interval operator+(const Interval& interval, const double displacement) {
+    return Interval{interval.Min() + displacement, interval.Max() + displacement};
+}
+
+inline Interval operator+(const double displacement, const Interval& interval) {
+    // invoke the above
+    return interval + displacement;
+}
+
 namespace RTInterval {
 const Interval EMPTY(+config::infinity, -config::infinity);
 const Interval UNIVERSE(-config::infinity, +config::infinity);

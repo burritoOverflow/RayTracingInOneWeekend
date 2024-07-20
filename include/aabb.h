@@ -30,6 +30,12 @@ class AxisAlignedBoundingBox {
         this->z_ = Interval(bbox1.z_, bbox2.z_);
     }
 
+    inline Interval x() const { return this->x_; }
+
+    inline Interval y() const { return this->y_; }
+
+    inline Interval z() const { return this->z_; }
+
     static const AxisAlignedBoundingBox EMPTY, UNIVERSE;
 
     inline const Interval AxisInterval(const int n) const {
@@ -69,5 +75,14 @@ class AxisAlignedBoundingBox {
         }
     }
 };
+
+inline AxisAlignedBoundingBox operator+(const AxisAlignedBoundingBox& bbox, const Vector3& offset) {
+    return AxisAlignedBoundingBox{bbox.x() + offset.x(), bbox.y() + offset.y(), bbox.z() + offset.z()};
+}
+
+inline AxisAlignedBoundingBox operator+(const Vector3& offset, const AxisAlignedBoundingBox& bbox) {
+    // invoke the above
+    return bbox + offset;
+}
 
 #endif  // RAYTRACINGINONEWEEKEND_AABB_H

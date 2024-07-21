@@ -8,7 +8,7 @@
 
 class AxisAlignedBoundingBox {
    public:
-    AxisAlignedBoundingBox(){};  // default AABB is empy since intervals are empty by default
+    AxisAlignedBoundingBox() = default;  // default AABB is empty since intervals are empty by default
 
     AxisAlignedBoundingBox(const Interval& x, const Interval& y, const Interval& z) : x_(x), y_(y), z_(z) {
         this->PadToMinimum();
@@ -36,9 +36,9 @@ class AxisAlignedBoundingBox {
 
     inline Interval z() const { return this->z_; }
 
-    static const AxisAlignedBoundingBox EMPTY, UNIVERSE;
+    [[maybe_unused]] static const AxisAlignedBoundingBox EMPTY, UNIVERSE;
 
-    inline const Interval AxisInterval(const int n) const {
+    inline Interval AxisInterval(const int n) const {
         if (n == 1) {
             return y_;
         }

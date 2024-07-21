@@ -29,6 +29,7 @@ FetchContent_MakeAvailable(stb)
 add_library(stb INTERFACE)
 
 set(SOURCES
+        src/scenes.cc
         src/sphere.cc
         src/hittable_list.cc
         src/camera.cc

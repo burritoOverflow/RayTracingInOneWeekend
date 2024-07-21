@@ -1,5 +1,4 @@
 #include "quad.h"
-#include <math.h>
 #include <cmath>
 #include <memory>
 #include "hittable_list.h"

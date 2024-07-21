@@ -11,6 +11,7 @@
 // contains the args provided via the longopts.
 namespace args {
 struct Args {
+    // TODO: this is required and should not be an optional type
     std::optional<std::string> render_option_;  // string corresponding to the rendered scene
     std::optional<u_int16_t> image_width_;      // desired width of the image
 };

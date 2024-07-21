@@ -6,9 +6,9 @@
 
 class DiffuseLight : public Material {
    public:
-    DiffuseLight(std::shared_ptr<Texture>& texture) : texture_(texture){};
+    explicit DiffuseLight(std::shared_ptr<Texture>& texture) : texture_(texture){};
 
-    DiffuseLight(const color::Color& emit) : texture_(std::make_shared<SolidColor>(emit)){};
+    explicit DiffuseLight(const color::Color& emit) : texture_(std::make_shared<SolidColor>(emit)){};
 
     color::Color Emitted(const double u, const double v, const Point3& point) const override {
         return this->texture_->Value(u, v, point);

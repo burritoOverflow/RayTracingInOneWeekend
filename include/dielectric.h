@@ -6,7 +6,7 @@
 
 class Dielectric final : public Material {
    public:
-    Dielectric(const double index_of_refraction) : ir_(index_of_refraction) {}
+    explicit Dielectric(const double index_of_refraction) : ir_(index_of_refraction) {}
 
     inline bool Scatter(const Ray& ray,
                         const HitRecord& hit_record,

@@ -41,7 +41,7 @@ void Camera::Render(const Hittable& world) {
     const auto image_out_filename = config::GetCurrentDateStr(date_fmt_str) + "image.ppm";
     const auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
 
-    std::clog << "\r" << config::GetLogPreamble() << "Writing image to path '" << image_path.string() << "'\n";
+    std::clog << "\r" << config::GetLogPreamble() << "  Writing image to path '" << image_path.string() << "'\n";
 
     std::ofstream out_stream(image_path.string().c_str());
     out_stream << "P3\n" << this->image_width_ << ' ' << this->image_height_ << "\n255\n";

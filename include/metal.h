@@ -21,7 +21,7 @@ class Metal final : public Material {
 
    private:
     color::Color albedo_;
-    double fuzz_;  // see 10.6 fuzzy reflection (0 is no perturbation)
+    [[maybe_unused]] double fuzz_;  // see 10.6 fuzzy reflection (0 is no perturbation)
 };
 
 #endif  // RAYTRACINGINONEWEEKEND_METAL_H

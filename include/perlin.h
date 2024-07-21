@@ -7,13 +7,13 @@
 class Perlin {
    public:
     Perlin() {
-        this->random_float_ = std::make_unique<double[]>(this->POINT_COUNT_);
-        this->randvec_ = std::make_unique<Vector3[]>(this->POINT_COUNT_);
-        for (int i = 0; i < this->POINT_COUNT_; ++i) {
+        this->random_float_ = std::make_unique<double[]>(Perlin::POINT_COUNT_);
+        this->randvec_ = std::make_unique<Vector3[]>(Perlin::POINT_COUNT_);
+        for (int i = 0; i < Perlin::POINT_COUNT_; ++i) {
             this->randvec_[i] = UnitVector(Vector3::GenerateRandomVector(-1, 1));
         }
 
-        for (int i = 0; i < this->POINT_COUNT_; ++i) {
+        for (int i = 0; i < Perlin::POINT_COUNT_; ++i) {
             this->random_float_[i] = config::GetRandomDouble();
         }
 
@@ -24,7 +24,7 @@ class Perlin {
 
     double Noise(const Point3& point) const;
 
-    double Turbulence(const Point3& point, const double depth) const;
+    double Turbulence(const Point3& point, double depth) const;
 
    private:
     static constexpr int POINT_COUNT_ = 256;
@@ -37,17 +37,14 @@ class Perlin {
 
     static std::unique_ptr<int[]> PerlinGeneratePerm();
 
-    static void Permute(std::unique_ptr<int[]>& p, const int n);
+    static void Permute(std::unique_ptr<int[]>& p, int n);
 
-    static double TrilinearInterpolation(const double c[2][2][2],
-                                         const double u,
-                                         const double v,
-                                         const double w);
+    [[maybe_unused]] static double TrilinearInterpolation(const double c[2][2][2],
+                                                          double u,
+                                                          double v,
+                                                          double w);
 
-    static double PerlinInterpolation(const Vector3 c[2][2][2],
-                                      const double u,
-                                      const double v,
-                                      const double w);
+    static double PerlinInterpolation(const Vector3 c[2][2][2], double u, double v, double w);
 };
 
 #endif  // PERLIN_H

@@ -69,7 +69,7 @@ class Translate : public Hittable {
 
 class RotateY : public Hittable {
    public:
-    RotateY(const std::shared_ptr<Hittable>& object, const double angle);
+    RotateY(const std::shared_ptr<Hittable>& object, double angle);
 
     inline AxisAlignedBoundingBox BoundingBox() const override { return this->bbox_; }
 

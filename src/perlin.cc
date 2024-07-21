@@ -1,5 +1,4 @@
 #include "perlin.h"
-#include <math.h>
 #include <cmath>
 #include "config.h"
 #include "vec3.h"
@@ -38,7 +37,7 @@ double Perlin::Turbulence(const Point3& point, const double depth) const {
     return fabs(accum);
 }
 
-double Perlin::TrilinearInterpolation(const double c[2][2][2], double u, double v, double w) {
+[[maybe_unused]] double Perlin::TrilinearInterpolation(const double c[2][2][2], double u, double v, double w) {
     double accumulator = 0.0;
 
     for (int i = 0; i < 2; i++)

@@ -52,7 +52,7 @@ args::Args ParseArgsArgMap(int argc, char** argv) {
 }
 
 // TODO: investigate this is strangely broken (segfaults on release builds(?))
-args::Args ParseArgsGetOptLong(int argc, char** argv) {
+[[maybe_unused]] args::Args ParseArgsGetOptLong(int argc, char** argv) {
     const char* const short_opts = "r:i:";
     const option long_opts[] = {{"render", required_argument, nullptr, 'r'},
                                 {"image-width", required_argument, nullptr, 'i'}};

@@ -15,7 +15,7 @@ class BoundingVolumeHierarchyNode : public Hittable {
    public:
     // see comments on the rationale here:
     // https://raytracing.github.io/books/RayTracingTheNextWeek.html#boundingvolumehierarchies/thebvhnodeclass
-    BoundingVolumeHierarchyNode(HittableList hittable_list)
+    explicit BoundingVolumeHierarchyNode(HittableList hittable_list)
         : BoundingVolumeHierarchyNode(hittable_list.GetObjects(), 0, hittable_list.GetObjects().size()){};
 
     BoundingVolumeHierarchyNode(std::vector<std::shared_ptr<Hittable>>& objects,
@@ -44,7 +44,8 @@ class BoundingVolumeHierarchyNode : public Hittable {
             this->left_ = objects.at(start);
             this->right_ = objects.at(start + 1);
         } else {
-            std::sort(objects.begin() + start, objects.begin() + end, comparator);
+            std::sort(objects.begin() + static_cast<long>(start), objects.begin() + static_cast<long>(end),
+                      comparator);
 
             const auto mid = start + object_span / 2;
             this->left_ = std::make_shared<BoundingVolumeHierarchyNode>(objects, start, mid);
@@ -65,7 +66,7 @@ class BoundingVolumeHierarchyNode : public Hittable {
 
     static bool BoxCompare(const std::shared_ptr<Hittable>& a,
                            const std::shared_ptr<Hittable>& b,
-                           const int axis_index);
+                           int axis_index);
 
     static bool BoxXCompare(const std::shared_ptr<Hittable>& a, const std::shared_ptr<Hittable>& b);
     static bool BoxYCompare(const std::shared_ptr<Hittable>& a, const std::shared_ptr<Hittable>& b);

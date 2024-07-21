@@ -41,5 +41,5 @@ bool AxisAlignedBoundingBox::Hit(const Ray& ray, Interval& ray_t) const {
 const AxisAlignedBoundingBox AxisAlignedBoundingBox::EMPTY =
     AxisAlignedBoundingBox{RTInterval::EMPTY, RTInterval::EMPTY, RTInterval::EMPTY};
 
-const AxisAlignedBoundingBox AxisAlignedBoundingBox::UNIVERSE =
+[[maybe_unused]] const AxisAlignedBoundingBox AxisAlignedBoundingBox::UNIVERSE =
     AxisAlignedBoundingBox{RTInterval::UNIVERSE, RTInterval::UNIVERSE, RTInterval::UNIVERSE};

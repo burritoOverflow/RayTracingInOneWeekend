@@ -38,7 +38,7 @@ class Interval {
     inline double GetSize() const { return this->max_ - this->min_; }
 
     // create a new interval padded by delta (see section 3.4) from an existing Interval
-    inline Interval Expand(const double delta) {
+    inline Interval Expand(const double delta) const {
         const auto padding = delta / 2;
         return {this->Min() - padding, this->Max() + padding};
     }

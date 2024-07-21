@@ -12,7 +12,7 @@ class Sphere final : public Hittable {
    public:
     // default ctor is a stationary Sphere
     Sphere(const Point3& center, const double radius, const std::shared_ptr<Material>& material)
-        : center_(std::move(center)), radius_(std::fmax(0, radius)), material_(material), is_moving_(false) {
+        : center_(center), radius_(std::fmax(0, radius)), material_(material), is_moving_(false) {
         const auto rvec = Vector3(radius, radius, radius);
         this->bbox_ = AxisAlignedBoundingBox(center - rvec, center + rvec);
     };
@@ -22,7 +22,7 @@ class Sphere final : public Hittable {
            const Point3& center2,
            double radius,
            const std::shared_ptr<Material>& material)
-        : center_(std::move(center1)), radius_(std::fmax(0, radius)), material_(material), is_moving_(true) {
+        : center_(center1), radius_(std::fmax(0, radius)), material_(material), is_moving_(true) {
         const auto rvec = Vector3(radius, radius, radius);
         const AxisAlignedBoundingBox bbox1 = AxisAlignedBoundingBox(center1 - rvec, center1 + rvec);
         const AxisAlignedBoundingBox bbox2 = AxisAlignedBoundingBox(center2 - rvec, center2 + rvec);

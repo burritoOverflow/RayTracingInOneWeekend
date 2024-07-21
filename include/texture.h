@@ -18,7 +18,7 @@ class Texture {
 
 class SolidColor : public Texture {
    public:
-    SolidColor(const color::Color& albedo) : albedo_(albedo){};
+    explicit SolidColor(const color::Color& albedo) : albedo_(albedo){};
 
     SolidColor(const double red, const double green, const double blue)
         : SolidColor(color::Color(red, green, blue)){};
@@ -61,7 +61,7 @@ class ImageTexture : public Texture {
 
 class NoiseTexture : public Texture {
    public:
-    NoiseTexture(const double scale) : scale_(scale){};
+    explicit NoiseTexture(const double scale) : scale_(scale){};
 
     color::Color Value(double u, double v, const Point3& point) const override;
 

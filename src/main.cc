@@ -20,8 +20,8 @@
 
 // set Camera state for a given render, via the RenderSceneOption provided
 // set the camera's image_width, if the parameter is present.
-Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
-                                const std::optional<u_int16_t>& image_width = std::nullopt) {
+static Camera ConfigureCameraForRender(const args::RenderedSceneOption render_option,
+                                       const std::optional<u_int16_t>& image_width = std::nullopt) {
     const color::Color DEFAULT_RENDER_BACKGROUND_COLOR{0.7, 0.8, 1.0};
     Camera camera{};
     camera.SetBackgroundColor(DEFAULT_RENDER_BACKGROUND_COLOR);
@@ -293,15 +293,12 @@ static void RenderCornellBox(const std::optional<u_int16_t>& image_width) {
 }
 
 static void RunRender(const args::Args& args) {
-    // requires the "render" arg
-    const std::optional<std::string> maybe_render_opt_str = args.render_option_;
-    if (maybe_render_opt_str->empty()) {
+    if (args.render_option_->empty()) {
         args::ShowHelp();
     }
 
-    const std::string& render_opt_str = *maybe_render_opt_str;
-
     // validate provided render arg
+    const std::string& render_opt_str = args.render_option_.value();
     const auto result = args::RENDER_ARG_OPTION_MAP.find(render_opt_str);
     if (result == args::RENDER_ARG_OPTION_MAP.end()) {
         args::ShowHelp();

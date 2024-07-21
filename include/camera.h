@@ -8,7 +8,7 @@ class Camera final {
    public:
     void Render(const Hittable& world);
 
-    void SetMaxRecursionDepth(const int max_recursion_depth) {
+    inline void SetMaxRecursionDepth(const int max_recursion_depth) {
         this->max_recursion_depth_ = max_recursion_depth;
     }
 
@@ -38,7 +38,7 @@ class Camera final {
 
    private:
     double aspect_ratio_ = 16.0 / 9.0;  // ratio of image width over height
-    int image_width_ = 1200;            // rendered image width in pixel count
+    int image_width_ = 800;             // rendered image width in pixel count
     int image_height_;                  // rendered image height
     Point3 camera_center_;
     Point3 pixel00_loc_;             // location of pixel 0,0

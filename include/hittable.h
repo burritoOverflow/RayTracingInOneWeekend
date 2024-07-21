@@ -37,6 +37,7 @@ class Hittable {
     virtual ~Hittable() = default;
 };
 
+// see Section 8.1
 class Translate : public Hittable {
    public:
     Translate(const std::shared_ptr<Hittable>& object, const Vector3& offset)
@@ -48,7 +49,7 @@ class Translate : public Hittable {
 
     inline bool Hit(const Ray& ray, Interval ray_t, HitRecord& hit_record) const override {
         // move Ray backwards by the offset
-        Ray offset_r{ray.origin() - offset_, ray.direction(), ray.time()};
+        const Ray offset_r{ray.origin() - offset_, ray.direction(), ray.time()};
 
         // Determine whether (and where) an Intersection exists along the offset Ray
         if (!object_->Hit(offset_r, ray_t, hit_record)) {
@@ -56,7 +57,7 @@ class Translate : public Hittable {
         }
 
         // adjust intersection Point forwards by the offset
-        hit_record.point_ += offset_;
+        hit_record.point_ += this->offset_;
         return true;
     }
 

@@ -53,7 +53,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-        "$<${GCC_LIKE_CXX}:-Wall;-Wextra;-Wconversion;-Wdouble-promotion;-Wno-unused-parameter;-Wno-unused-function;-Wno-sign-conversion>"
+        "$<${GCC_LIKE_CXX}:-Wall;-Wextra;-pedantic;-Wconversion;-Wdouble-promotion;-Wno-unused-parameter;-Wno-unused-function;-Wno-sign-conversion;-Wmissing-field-initializers>"
 )
 
 set(IMAGE_DIR "texture_images")

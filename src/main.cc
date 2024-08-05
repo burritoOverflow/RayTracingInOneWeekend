@@ -43,5 +43,5 @@ static void RunRender(const args::Args& args) {
 
 int main(int argc, char** argv) {
     RunRender(args::ParseArgs(argc, argv));
-    return 0;
+    exit(EXIT_SUCCESS);
 }

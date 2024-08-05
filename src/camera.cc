@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <chrono>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include "config.h"
@@ -35,13 +36,18 @@ color::Color Camera::RayColor(const Ray& ray, const Hittable& world, int depth) 
 
 void Camera::Render(const Hittable& world) {
     Init();
-    config::CreateImageOutdir();
+
+    if (!config::CreateImageOutdir()) {
+        std::cerr << "Failure creating image directory" << '\n';
+        exit(EXIT_FAILURE);
+    }
 
     const std::string date_fmt_str = "%m-%d-%Y_%H-%M-%S";
     const auto image_out_filename = config::GetCurrentDateStr(date_fmt_str) + "image.ppm";
     const auto image_path = std::filesystem::path(config::DIRNAME) / image_out_filename;
 
-    std::clog << "\r" << config::GetLogPreamble() << "  Writing image to path '" << image_path.string() << "'\n";
+    std::clog << "\r" << config::GetLogPreamble() << "  Writing image to path '" << image_path.string()
+              << "'\n";
 
     std::ofstream out_stream(image_path.string().c_str());
     out_stream << "P3\n" << this->image_width_ << ' ' << this->image_height_ << "\n255\n";

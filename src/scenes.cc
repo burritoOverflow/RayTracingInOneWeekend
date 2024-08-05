@@ -106,8 +106,8 @@ void RayTracingScenes::RenderCheckeredSpheresWorld(const std::optional<u_int16_t
     const double radius = 10;
     const std::shared_ptr<Lambertian> checker_mat_ptr = std::make_shared<Lambertian>(checker);
 
-    auto sphere = std::make_shared<Sphere>(Point3(0, -10, 0), radius, checker_mat_ptr);
-    auto sphere2 = std::make_shared<Sphere>(Point3(0, 10, 0), radius, checker_mat_ptr);
+    const auto sphere = std::make_shared<Sphere>(Point3(0, -10, 0), radius, checker_mat_ptr);
+    const auto sphere2 = std::make_shared<Sphere>(Point3(0, 10, 0), radius, checker_mat_ptr);
 
     world.AddObject(sphere);
     world.AddObject(sphere2);

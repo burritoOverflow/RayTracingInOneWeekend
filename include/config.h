@@ -21,7 +21,7 @@ std::string GetCurrentDateStr(const std::string& time_fmt_str);
 
 std::string GetLogPreamble();
 
-void CreateImageOutdir();
+bool CreateImageOutdir();
 
 void LogDuration(std::chrono::steady_clock::time_point start_time,
                  std::chrono::steady_clock::time_point end_time);

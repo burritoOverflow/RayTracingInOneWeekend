@@ -20,10 +20,15 @@ std::string config::GetLogPreamble() {
     return GetCurrentDateStr(date_fmt_str);
 }
 
-void config::CreateImageOutdir() {
+bool config::CreateImageOutdir() {
+    bool success{true};
+
     if (!std::filesystem::exists(config::DIRNAME)) {
-        std::filesystem::create_directory(config::DIRNAME);
+        if (!std::filesystem::create_directory(config::DIRNAME)) {
+            success = false;
+        }
     }
+    return success;
 }
 
 void config::LogDuration(const std::chrono::steady_clock::time_point start_time,
